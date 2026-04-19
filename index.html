@@ -326,37 +326,17 @@ window.showCacheDetail=()=>{const m=getMeta();if(!m){alert('No cache.');return;}
 window.clearCache=()=>{document.getElementById('exportDropdown').classList.remove('open');if(!confirm('Clear all locally saved motor data?\nPage will reload and re-fetch.'))return;localStorage.removeItem(LS_KEY);localStorage.removeItem(META_KEY);location.reload();};
 
 // ═══════════════════════════════════════════════════════
-// FETCH — tries proxies in order, cache-busts to prevent stale proxy responses
+// FETCH
 // ═══════════════════════════════════════════════════════
 async function fetchCSV(url){
-  // Append timestamp to bust any proxy-level caching of old CSV responses
-  const bustUrl = url + '&_t=' + Date.now();
   const ordered=workingProxy?[workingProxy,...PROXIES.filter(p=>p.name!==workingProxy.name)]:PROXIES;
   for(const proxy of ordered){
     try{
-      const proxyUrl = proxy.url(bustUrl);
-      const res=await fetch(proxyUrl,{signal:AbortSignal.timeout(20000)});
-      if(!res.ok)continue;
-      const text=await proxy.extract(res);
-      // Validate: a real sheet CSV will have many commas and be large
-      // If it's under 10KB something is wrong (truncated/error response)
-      if(text && text.length > 10000){
-        workingProxy=proxy;
-        console.log('Proxy "'+proxy.name+'" returned '+text.length+' bytes');
-        return text;
-      } else if(text && text.length > 100) {
-        console.warn('Proxy "'+proxy.name+'" returned only '+text.length+' bytes — may be truncated, trying next');
-      }
-    }catch(e){console.warn('Proxy',proxy.name,'failed:',e.message);}
-  }
-  // Last resort: try without cache-busting in case the parameter breaks some proxies
-  for(const proxy of ordered){
-    try{
-      const res=await fetch(proxy.url(url),{signal:AbortSignal.timeout(20000)});
+      const res=await fetch(proxy.url(url),{signal:AbortSignal.timeout(15000)});
       if(!res.ok)continue;
       const text=await proxy.extract(res);
       if(text&&text.length>100){workingProxy=proxy;return text;}
-    }catch(e){console.warn('Proxy fallback',proxy.name,'failed:',e.message);}
+    }catch(e){console.warn('Proxy',proxy.name,'failed:',e.message);}
   }
   throw new Error('All proxies failed. Open 🔍 Diagnose for details.');
 }
@@ -545,15 +525,17 @@ window.runDiag=async()=>{
       if(!res.ok){dlog('  ✗ Non-2xx','err');continue;}
       const text=await proxy.extract(res);
       if(!text||text.length<100){dlog('  ✗ Empty','err');continue;}
-      dlog('  ✓ Got '+text.length.toLocaleString()+' bytes'+(text.length < 10000 ? ' ⚠ SUSPICIOUSLY SMALL — may be truncated' : ''),'ok');
+      dlog('  ✓ Got '+text.length.toLocaleString()+' bytes','ok');
+
+      // Quick parse check
       const rows=parseCSVRows(text);
-      dlog('  Rows in CSV: '+rows.length+(rows.length < 20 ? ' ⚠ TOO FEW ROWS' : ''));
+      dlog('  Rows in CSV: '+rows.length);
+      const dateRow=rows[DATE_ROW]||[];
       const shiftRow=rows[SHIFT_ROW]||[];
       let fdc=7;for(let ci=1;ci<Math.min(shiftRow.length,30);ci++){if(shiftRow[ci].trim().toUpperCase()==='SHIFT A'){fdc=ci;break;}}
-      const dateRow=rows[DATE_ROW]||[];
       const dateCells=dateRow.filter(v=>DATE_REGEX.test(v.trim()));
       dlog('  First data col detected: '+fdc+' (col '+String.fromCharCode(64+fdc)+' in sheet)');
-      dlog('  Date cells found (row '+DATE_ROW+'): '+dateCells.length+(dateCells.length?'  ['+dateCells[0]+' … '+dateCells[dateCells.length-1]+']':'')+(dateCells.length < 3 ? ' ⚠ TOO FEW DATES — proxy may be truncating' : ''));
+      dlog('  Date cells found (row '+DATE_ROW+'): '+dateCells.length+(dateCells.length?'  ['+dateCells[0]+' … '+dateCells[dateCells.length-1]+']':''));
       if(dateCells.length===0){
         dlog('  ✗ No dates — check DATE_ROW constant or sheet structure','err');
       } else {
@@ -597,8 +579,6 @@ window.runDiag=async()=>{
 
 // ═══════════════════════════════════════════════════════
 // REFRESH & MERGE
-// Fetches all sheets fresh, merges NEW dates into existing cache
-// (existing readings are never overwritten — standby/running changes preserved)
 // ═══════════════════════════════════════════════════════
 window.refreshFromSheets=async function(silent=false){
   const btn=document.getElementById('refreshBtn');
@@ -606,17 +586,13 @@ window.refreshFromSheets=async function(silent=false){
   if(!silent){btn.classList.add('loading');btn.innerHTML='⏳ Fetching…';status.textContent='';}
   try{
     const fetched=await fetchAllSheets(silent);
-    // Merge: fetched data is the "incoming", existing cache is "existing"
-    // New dates get added, old dates are kept untouched
-    const existing = loadCache() || [];
-    const merged = mergeMotors(existing, fetched);
+    const merged=mergeMotors(loadCache()||[],fetched);
     motors.length=0;merged.forEach(m=>motors.push(m));
     saveCache(merged);rebuildGroups();renderList();updateAlertBadge();updateCacheBar();
     if(!silent){
       selectedIdx=null;
       document.getElementById('mainArea').innerHTML='<div class="empty"><div class="empty-icon">⚡</div><div>Data merged &amp; saved — select a motor to view</div></div>';
-      const totalReadings = merged.reduce((s,m)=>s+Object.keys(m.readings).length,0);
-      status.textContent='✓ '+merged.length+' motors · '+totalReadings.toLocaleString()+' readings · '+new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+      status.textContent='✓ '+fetched.length+' motors · '+new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
       btn.innerHTML='🔄 Refresh &amp; Merge';btn.classList.remove('loading');
     }
   }catch(err){
@@ -632,51 +608,32 @@ function showErr(msg){
 
 // ═══════════════════════════════════════════════════════
 // STARTUP
-// Always fetches fresh from Sheets on load.
-// If fetch fails, falls back to cache so the app still works offline.
 // ═══════════════════════════════════════════════════════
 async function startup(){
-  // Show splash immediately
-  const splash=document.getElementById('splash');
-  splash.style.display='flex';
-  document.getElementById('splash-status').textContent='Connecting to Google Sheets…';
-
-  try{
-    // Always fetch fresh — never load old cache without a fresh fetch first
-    const fetched = await fetchAllSheets(false);
-
-    document.getElementById('sbar').style.width='92%';
-    document.getElementById('splash-status').textContent='Saving '+fetched.length+' motors to cache…';
-
-    // Merge with any existing cached data so historical readings are preserved
-    const existing = loadCache() || [];
-    const merged   = existing.length > 0 ? mergeMotors(existing, fetched) : fetched;
-
-    motors.length=0;
-    merged.forEach(m=>motors.push(m));
-    saveCache(merged);
+  const cached=loadCache();
+  if(cached&&cached.length>0){
+    cached.forEach(m=>motors.push(m));
     rebuildGroups();renderList();updateAlertBadge();updateCacheBar();
-
-    document.getElementById('sbar').style.width='100%';
-    await new Promise(r=>setTimeout(r,300));
-    splash.style.display='none';
     setTimeout(()=>{const f=document.querySelector('.motor-item');if(f)f.click();},80);
-
-  }catch(err){
-    // Fetch failed — try loading from cache as fallback
-    console.warn('Fresh fetch failed, falling back to cache:', err.message);
-    const cached = loadCache();
-    splash.style.display='none';
-
-    if(cached && cached.length > 0){
-      cached.forEach(m=>motors.push(m));
-      rebuildGroups();renderList();updateAlertBadge();updateCacheBar();
+    if(cacheAgeH()>=AUTO_REFRESH_H){
+      document.getElementById('cbAuto').textContent='Background sync running…';
+      refreshFromSheets(true).then(()=>{document.getElementById('cbAuto').textContent='✓ Background sync done';setTimeout(()=>{document.getElementById('cbAuto').textContent='';},4000);}).catch(()=>{document.getElementById('cbAuto').textContent='';});
+    }
+  }else{
+    const splash=document.getElementById('splash');splash.style.display='flex';
+    try{
+      const fetched=await fetchAllSheets(false);
+      document.getElementById('sbar').style.width='92%';
+      document.getElementById('splash-status').textContent='Saving '+fetched.length+' motors to cache…';
+      fetched.forEach(m=>motors.push(m));
+      saveCache(fetched);rebuildGroups();renderList();updateAlertBadge();updateCacheBar();
+      document.getElementById('sbar').style.width='100%';
+      await new Promise(r=>setTimeout(r,300));
+      splash.style.display='none';
       setTimeout(()=>{const f=document.querySelector('.motor-item');if(f)f.click();},80);
-      // Show a non-blocking warning that data may be stale
-      const status = document.getElementById('refreshStatus');
-      if(status) status.textContent = '⚠ Offline — showing cached data';
-    } else {
-      document.getElementById('mainArea').innerHTML='<div class="empty"><div class="empty-icon">⚠️</div><div>Could not fetch data and no cache found.<br>Click <strong>🔍 Diagnose</strong> to troubleshoot.</div></div>';
+    }catch(err){
+      splash.style.display='none';
+      document.getElementById('mainArea').innerHTML='<div class="empty"><div class="empty-icon">⚠️</div><div>Could not fetch data.<br>Click <strong>🔍 Diagnose</strong> in the header to see what\'s blocking it.</div></div>';
       showErr(err.message);
     }
   }
