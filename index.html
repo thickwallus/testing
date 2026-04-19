@@ -237,8 +237,8 @@ select:focus,input:focus{border-color:#3a7bd5}
 // ═══════════════════════════════════════════════════════
 // CONFIG
 // ═══════════════════════════════════════════════════════
-const LS_KEY   = 'mcc_motors_v6';
-const META_KEY = 'mcc_meta_v6';
+const LS_KEY   = 'mcc_motors_v7';
+const META_KEY = 'mcc_meta_v7';
 const AUTO_REFRESH_H = 24;
 
 // Sheet structure constants (confirmed from screenshot):
@@ -380,19 +380,58 @@ function parseCSVRows(csv){
 
 // ═══════════════════════════════════════════════════════
 // SHEET PARSER
-// Confirmed sheet layout (from screenshots):
-//   - DATE_ROW  (3): col 0-6 blank, then date strings every 3 cols from col 7+
-//                    Merged cells → only the first cell of each 3-col span has text in CSV
-//   - SHIFT_ROW (4): col 0-6 = header labels, then repeating SHIFT A / SHIFT B / SHIFT C
-//   - DATA_START(7): motor data rows begin
+// Confirmed sheet layout (from screenshots + CSV analysis):
+//   - DATE_ROW  (3): col 0-6 blank, date strings from col 7+ every 3 cols
+//   - SHIFT_ROW (4): col 0-6 headers, then SHIFT A / SHIFT B / SHIFT C repeating
+//   - DATA_START(7): motor data rows
 //
-// FIX 1 — firstDataCol auto-detected from SHIFT_ROW (was hardcoded to wrong value 8)
-// FIX 2 — loop bound uses shiftRow.length not dateRow.length
-//          (Google CSV strips trailing empty cells from date row, causing last date's
-//           Shift B & C to read as undefined → NaN → silently lost above ~100 days)
-// FIX 3 — date detection uses a real date regex, not fragile length > 3 check
+// DATE FORMATS found across all 3 sheets (must all match):
+//   '31st Oct 2023'   — ordinal + full year
+//   '29th OCT 23'     — ordinal + 2-digit year
+//   '22ndNov 2024'    — ordinal no space before month
+//   '30 th Dec 2024'  — space inside ordinal
+//   '1-Jul-25'        — hyphen separated, 2-digit year
+//   '1st May2025'     — no space before year
+// One rule covers all: starts with 1-2 digits, contains a 3-letter month abbreviation
+//
+// VALUE CLEANING: operators enter typos like '8..55', '4…45', '.3.8'
+//   → clean by collapsing multiple dots, strip leading/trailing dots, then parseFloat
+//
+// RATED CURRENT COLUMN: differs per sheet
+//   CP Current: col 5 labelled "Rated current (Amp)"
+//   SSP1:       col 5 labelled "Current" (Amp)
+//   Biomass 1:  col 5 labelled "Current" (Amp) — col 6 is kW power, NOT current
+//   → In all cases col 5 is the rated current in Amps; use that for all sheets
 // ═══════════════════════════════════════════════════════
-const DATE_REGEX = /^\d+\w*\s+[A-Za-z]{3,9}[\s,]+\d{4}$|^\d+\s+[A-Za-z]{3,9}\s+\d{4}$/;
+
+// Matches any cell starting with 1-2 digits that contains a 3-letter month name.
+// Handles every real-world format found in all 3 sheets:
+//   '31st Oct 2023'  '29th OCT 23'  '22ndNov 2024'  '30 th Dec 2024'
+//   '1-Jul-25'  '17-Apr-26'  '1st May2025'  '25thDec 2024'
+const DATE_REGEX = /^\d{1,2}\s*(?:st|nd|rd|th)?\s*[-]?\s*\d{0,2}\s*(?:th|st|nd|rd)?\s*[-]?\s*(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)/i;
+
+// Clean a raw cell value to extract a numeric reading.
+// Handles operator typos: '8..55' → 8.55, '4…45' → 4.45, '.3.8' → 3.8,
+// '36.5.' → 36.5, '4…45' (unicode ellipsis) → 4.45
+// Returns the number if valid and > 0, otherwise null.
+function cleanVal(raw){
+  if(!raw) return null;
+  let s = raw.trim();
+  if(!s) return null;
+  // Replace unicode ellipsis with a dot
+  s = s.replace(/\u2026/g, '.').replace(/…/g, '.');
+  // Collapse two or more consecutive dots into one
+  s = s.replace(/\.{2,}/g, '.');
+  // Strip leading and trailing dots
+  s = s.replace(/^\.+/, '').replace(/\.+$/, '');
+  if(!s) return null;
+  const v = parseFloat(s);
+  // Must be a clean parse (no trailing junk) and positive
+  if(isNaN(v) || v <= 0) return null;
+  // Reject if there's non-numeric junk after the number (e.g. '26.4(breaker)')
+  if(String(v).length < s.replace(/[^0-9.]/g,'').length - 1) return null;
+  return Math.round(v * 1000) / 1000;
+}
 
 function parseSheet(csv, src){
   const rows = parseCSVRows(csv);
@@ -406,60 +445,58 @@ function parseSheet(csv, src){
   const dateRow  = rows[DATE_ROW]  || [];
   const shiftRow = rows[SHIFT_ROW] || [];
 
-  // FIX 1: Auto-detect first data column by finding first "SHIFT A" in shiftRow.
-  // Scan cols 1–30 to handle any number of header columns on the left.
-  let firstDataCol = 7; // safe fallback (confirmed col H = index 7 from screenshot)
+  // Auto-detect first data column: find first "SHIFT A" in shiftRow (cols 1–30)
+  let firstDataCol = 7; // safe fallback confirmed from screenshots
   for(let ci = 1; ci < Math.min(shiftRow.length, 30); ci++){
-    if(shiftRow[ci].trim().toUpperCase() === 'SHIFT A'){
-      firstDataCol = ci; break;
-    }
+    if(shiftRow[ci].trim().toUpperCase() === 'SHIFT A'){ firstDataCol = ci; break; }
   }
 
-  // FIX 2 + FIX 3: Scan dateRow using shiftRow.length as the upper bound (not dateRow.length).
-  // shiftRow always has "SHIFT C" text in the last column so it is never shorter than needed.
-  // Use DATE_REGEX instead of length > 3 to correctly identify date strings.
-  const dateCols = []; // [{dateStr, colA, colB, colC}]
-  const bound = shiftRow.length; // FIX 2: use shiftRow length, never dateRow length
-  for(let ci = firstDataCol; ci < bound; ci++){
+  // Build date→column map.
+  // Loop bound = shiftRow.length (NOT dateRow.length) so the last date's B and C
+  // columns are never out-of-bounds even when Google CSV strips trailing empty cells.
+  const dateCols = [];
+  for(let ci = firstDataCol; ci < shiftRow.length; ci++){
     const v = (dateRow[ci] || '').trim();
     if(DATE_REGEX.test(v)){
-      // This col is a date header; its three shift columns are ci, ci+1, ci+2
       dateCols.push({dateStr: v, colA: ci, colB: ci+1, colC: ci+2});
     }
   }
 
-  if(dateCols.length===0){
-    diag.errors.push('No dates found in row '+DATE_ROW+'. First data col detected: '+firstDataCol);
+  if(dateCols.length === 0){
+    diag.errors.push('No dates found in row '+DATE_ROW+'. firstDataCol='+firstDataCol);
     diag.errors.push('dateRow sample: '+dateRow.slice(0,15).join(' | '));
     return {motors:[], diag};
   }
 
   diag.dates = [dateCols[0].dateStr, dateCols[dateCols.length-1].dateStr];
 
-  // --- Parse motor rows ---
+  // Parse motor rows
   const result = [];
-  for(let ri=DATA_START; ri<rows.length; ri++){
+  for(let ri = DATA_START; ri < rows.length; ri++){
     const row = rows[ri];
     if(!row || row.length < 2) continue;
 
-    // S NO must be a number
-    const sno = (row[0]||'').trim();
+    // Skip rows where S NO is not a positive integer
+    const sno = (row[0] || '').trim();
     if(!sno || isNaN(parseFloat(sno))){ diag.skipped++; continue; }
 
-    const tag  = (row[TAG_COL] ||'').trim();
-    const desc = (row[DESC_COL]||'').trim();
-    const mcc  = (row[MCC_COL] ||'').trim();
+    const tag  = (row[TAG_COL]  || '').trim();
+    const desc = (row[DESC_COL] || '').trim();
+    const mcc  = (row[MCC_COL]  || '').trim();
     if(!tag){ diag.skipped++; continue; }
 
+    // Rated current is always col 5 across all three sheets
     const rv    = parseFloat(row[RATED_COL]);
     const rated = isNaN(rv) ? null : rv;
 
+    // Extract shift readings for every date column.
+    // cleanVal() handles typos so no valid reading is lost.
     const readings = {};
     for(const {dateStr, colA, colB, colC} of dateCols){
       const shifts = {};
-      const vA = parseFloat(row[colA]); if(!isNaN(vA)&&vA>0) shifts.A = Math.round(vA*1000)/1000;
-      const vB = parseFloat(row[colB]); if(!isNaN(vB)&&vB>0) shifts.B = Math.round(vB*1000)/1000;
-      const vC = parseFloat(row[colC]); if(!isNaN(vC)&&vC>0) shifts.C = Math.round(vC*1000)/1000;
+      const vA = cleanVal(row[colA]); if(vA !== null) shifts.A = vA;
+      const vB = cleanVal(row[colB]); if(vB !== null) shifts.B = vB;
+      const vC = cleanVal(row[colC]); if(vC !== null) shifts.C = vC;
       if(Object.keys(shifts).length) readings[dateStr] = shifts;
     }
 
@@ -468,7 +505,7 @@ function parseSheet(csv, src){
       result.push({
         source: src,
         group:  groupFromTag(tag, mcc, src),
-        tag, description:desc, mcc,
+        tag, description: desc, mcc,
         rated_current: rated,
         readings
       });
@@ -479,7 +516,7 @@ function parseSheet(csv, src){
     }
   }
 
-  return {motors:result, diag};
+  return {motors: result, diag};
 }
 
 function groupFromTag(tag, mcc, src){
