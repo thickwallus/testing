@@ -403,42 +403,8 @@ function parseSheet(csv, src){
     return {motors:[], diag};
   }
 
-  let DATE_ROW_DETECTED = -1;
-
-for (let r = 0; r < 15; r++) {
-  const row = rows[r] || [];
-  const count = row.filter(v => v && /\d/.test(v) && /[a-zA-Z]/.test(v)).length;
-
-  if (count >= 3) {
-    DATE_ROW_DETECTED = r;
-    break;
-  }
-}
-
-if (DATE_ROW_DETECTED === -1) {
-  diag.errors.push('No DATE row detected');
-  return { motors: [], diag };
-}
-
-const dateRow = rows[DATE_ROW_DETECTED];
-
-  let SHIFT_ROW_DETECTED = -1;
-
-for (let r = DATE_ROW_DETECTED; r < DATE_ROW_DETECTED + 5; r++) {
-  const row = rows[r] || [];
-  if (row.some(v => v && v.toUpperCase().includes('SHIFT'))) {
-    SHIFT_ROW_DETECTED = r;
-    break;
-  }
-}
-
-if (SHIFT_ROW_DETECTED === -1) {
-  diag.errors.push('No SHIFT row detected');
-  return { motors: [], diag };
-}
-
-const shiftRow = rows[SHIFT_ROW_DETECTED];
-;
+  const dateRow  = rows[DATE_ROW]  || [];
+  const shiftRow = rows[SHIFT_ROW] || [];
 
   // FIX 1: Auto-detect first data column by finding first "SHIFT A" in shiftRow.
   // Scan cols 1–30 to handle any number of header columns on the left.
@@ -472,10 +438,7 @@ const shiftRow = rows[SHIFT_ROW_DETECTED];
 
   // --- Parse motor rows ---
   const result = [];
-  const DATA_START_DETECTED = SHIFT_ROW_DETECTED + 2;
-
-for (let ri = DATA_START_DETECTED; ri < rows.length; ri++)
-{
+  for(let ri=DATA_START; ri<rows.length; ri++){
     const row = rows[ri];
     if(!row || row.length < 2) continue;
 
@@ -586,8 +549,7 @@ window.runDiag=async()=>{
       const rows=parseCSVRows(text);
       dlog('  Rows in CSV: '+rows.length+(rows.length < 20 ? ' ⚠ TOO FEW ROWS' : ''));
       const shiftRow=rows[SHIFT_ROW]||[];
-      let fdc=7;for(let ci=1;ci<Math.min(shiftRow.length,30);ci++){if(shiftRow[ci] && shiftRow[ci].toUpperCase().includes('SHIFT A')
-{fdc=ci;break;}}
+      let fdc=7;for(let ci=1;ci<Math.min(shiftRow.length,30);ci++){if(shiftRow[ci].trim().toUpperCase()==='SHIFT A'){fdc=ci;break;}}
       const dateRow=rows[DATE_ROW]||[];
       const dateCells=dateRow.filter(v=>DATE_REGEX.test(v.trim()));
       dlog('  First data col detected: '+fdc+' (col '+String.fromCharCode(64+fdc)+' in sheet)');
