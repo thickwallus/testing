@@ -237,8 +237,8 @@ select:focus,input:focus{border-color:#3a7bd5}
 // ═══════════════════════════════════════════════════════
 // CONFIG
 // ═══════════════════════════════════════════════════════
-const LS_KEY   = 'mcc_motors_v7';
-const META_KEY = 'mcc_meta_v7';
+const LS_KEY   = 'mcc_motors_v8';
+const META_KEY = 'mcc_meta_v8';
 const AUTO_REFRESH_H = 24;
 
 // Sheet structure constants (confirmed from screenshot):
@@ -362,20 +362,48 @@ async function fetchCSV(url){
 }
 
 // ═══════════════════════════════════════════════════════
-// CSV ROW PARSER
+// CSV ROW PARSER — RFC 4180 compliant
+// Handles quoted cells with embedded newlines, e.g.:
+//   "Rated current\n(Amp)"  →  single cell value "Rated current\n(Amp)"
+// The old naive split('\n').map() broke whenever a quoted cell contained
+// a real newline, because it split the cell mid-value and made shiftRow
+// only 6 columns long — so the date loop never ran → 0 motors from CP Current.
 // ═══════════════════════════════════════════════════════
 function parseCSVRows(csv){
-  // Handle \r\n and \n line endings
-  return csv.replace(/\r\n/g,'\n').replace(/\r/g,'\n').split('\n').map(line=>{
-    const cols=[];let cur='';let inQ=false;
-    for(let i=0;i<line.length;i++){
-      const c=line[i];
-      if(c==='"'){inQ=!inQ;}
-      else if(c===','&&!inQ){cols.push(cur.trim());cur='';}
-      else cur+=c;
+  // Normalise line endings to \n
+  const text = csv.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+  const rows = [];
+  let cols = [], cur = '', inQ = false;
+
+  for(let i = 0; i < text.length; i++){
+    const c = text[i];
+
+    if(inQ){
+      if(c === '"'){
+        // Peek ahead: "" inside a quoted cell = escaped quote, not end of cell
+        if(text[i+1] === '"'){ cur += '"'; i++; }
+        else { inQ = false; }  // closing quote
+      } else {
+        cur += c;  // newlines inside quotes are part of the cell value
+      }
+    } else {
+      if(c === '"'){
+        inQ = true;  // opening quote
+      } else if(c === ','){
+        cols.push(cur.trim()); cur = '';
+      } else if(c === '\n'){
+        cols.push(cur.trim());
+        rows.push(cols);
+        cols = []; cur = '';
+      } else {
+        cur += c;
+      }
     }
-    cols.push(cur.trim());return cols;
-  });
+  }
+  // Push final cell and row
+  cols.push(cur.trim());
+  if(cols.some(c => c !== '')) rows.push(cols);
+  return rows;
 }
 
 // ═══════════════════════════════════════════════════════
