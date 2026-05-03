@@ -8,140 +8,190 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:system-ui,-apple-system,sans-serif;background:#f4f4f4;color:#1a1a1a;font-size:14px}
-.author-bar{position:fixed;bottom:0;left:0;right:0;height:24px;background:#0d1b2e;color:rgba(255,255,255,0.7);font-size:11px;display:flex;align-items:center;justify-content:center;gap:6px;z-index:9999;letter-spacing:0.3px;user-select:none;-webkit-user-select:none}
+#cacheBar{display:flex;align-items:center;gap:8px;padding:3px 14px;font-size:11px;background:#0f2540;color:rgba(255,255,255,0.55);border-bottom:1px solid rgba(255,255,255,0.08);flex-wrap:wrap;min-height:24px}
+.cb-pill{display:inline-flex;align-items:center;padding:1px 8px;border-radius:8px;font-size:10px;font-weight:600;border:1px solid;white-space:nowrap}
+.cb-ok{background:rgba(39,174,96,0.15);border-color:rgba(39,174,96,0.4);color:#7dcea0}
+.cb-warn{background:rgba(232,64,64,0.15);border-color:rgba(232,64,64,0.4);color:#f08080}
+.cb-info{background:rgba(58,123,213,0.15);border-color:rgba(58,123,213,0.4);color:#7fb3f5}
+.cb-spacer{flex:1}
+.cb-link{cursor:pointer;color:rgba(255,255,255,0.3);font-size:10px;text-decoration:underline;text-underline-offset:2px}
+.cb-link:hover{color:rgba(255,255,255,0.7)}
+.author-bar{position:fixed;bottom:0;left:0;right:0;height:24px;background:#0d1b2e;color:rgba(255,255,255,0.7);font-size:11px;display:flex;align-items:center;justify-content:center;gap:6px;z-index:9999;letter-spacing:0.3px;user-select:none}
 .author-bar span{color:#5b9cf6;font-weight:600}
-.layout{height:calc(100vh - 74px)!important}
-#pageAlert{height:calc(100vh - 74px)!important}
-.author-bar{position:fixed;bottom:0;left:0;right:0;height:24px;background:#0d1b2e;color:rgba(255,255,255,0.7);font-size:11px;display:flex;align-items:center;justify-content:center;gap:6px;z-index:9999;letter-spacing:0.3px;user-select:none;-webkit-user-select:none}
-.author-bar span{color:#5b9cf6;font-weight:600}
-.layout{height:calc(100vh - 74px)!important}
-#pageAlert{height:calc(100vh - 74px)!important}
-
-.header{background:#1a2a4a;color:#fff;padding:0 20px;display:flex;align-items:stretch}
-.header-title{display:flex;align-items:center;gap:10px;padding:12px 20px 12px 0;border-right:1px solid rgba(255,255,255,0.15)}
-.header-title h1{font-size:15px;font-weight:600;white-space:nowrap}
-.header-title span{font-size:11px;opacity:0.5;white-space:nowrap;margin-left:6px}
-.tab-bar{display:flex;align-items:stretch;padding-left:8px}
-.tab{padding:0 18px;display:flex;align-items:center;gap:7px;cursor:pointer;font-size:13px;font-weight:500;color:rgba(255,255,255,0.55);border-bottom:3px solid transparent;transition:all 0.15s;white-space:nowrap}
+.header{background:#1a2a4a;color:#fff;padding:0 16px;display:flex;align-items:stretch}
+.header-title{display:flex;align-items:center;gap:8px;padding:10px 16px 10px 0;border-right:1px solid rgba(255,255,255,0.15);flex-shrink:0}
+.header-title h1{font-size:14px;font-weight:600;white-space:nowrap}
+.header-title span{font-size:10px;opacity:0.45;white-space:nowrap;margin-left:4px}
+.tab-bar{display:flex;align-items:stretch;padding-left:6px}
+.tab{padding:0 16px;display:flex;align-items:center;gap:6px;cursor:pointer;font-size:12px;font-weight:500;color:rgba(255,255,255,0.5);border-bottom:3px solid transparent;transition:all 0.15s;white-space:nowrap}
 .tab:hover{color:rgba(255,255,255,0.9);background:rgba(255,255,255,0.05)}
-.tab.active{color:#fff;border-bottom:3px solid #5b9cf6}
+.tab.active{color:#fff;border-bottom-color:#5b9cf6}
 .tab-badge{background:#e84040;color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:10px;min-width:18px;text-align:center;line-height:16px}
-.tab-badge.zero{background:rgba(255,255,255,0.2);color:rgba(255,255,255,0.7)}
-
-/* ── Shared layout ── */
-.layout{display:flex;height:calc(100vh - 50px)}
-.sidebar{width:290px;min-width:250px;background:#fff;border-right:1px solid #e0e0e0;display:flex;flex-direction:column;overflow:hidden}
-.sidebar-top{padding:10px;border-bottom:1px solid #e8e8e8;display:flex;flex-direction:column;gap:7px}
-select,input[type=text],input[type=date]{width:100%;height:32px;padding:0 9px;border:1px solid #d0d0d0;border-radius:6px;background:#fff;color:#1a1a1a;font-size:12px;outline:none}
+.tab-badge.zero{background:rgba(255,255,255,0.18);color:rgba(255,255,255,0.6)}
+.hdr-right{display:flex;align-items:center;margin-left:auto;gap:6px;padding-left:8px;position:relative}
+.hdr-btn{display:flex;align-items:center;gap:5px;padding:4px 11px;border-radius:5px;font-size:11px;font-weight:600;cursor:pointer;transition:all 0.15s;white-space:nowrap;border:1px solid}
+.btn-green{background:rgba(39,174,96,0.15);border-color:rgba(39,174,96,0.4);color:#7dcea0}
+.btn-green:hover{background:rgba(39,174,96,0.3);color:#fff}
+.btn-green.loading{opacity:0.55;pointer-events:none}
+.btn-blue{background:rgba(91,156,246,0.15);border-color:rgba(91,156,246,0.4);color:#a8c8fa}
+.btn-blue:hover{background:rgba(91,156,246,0.28);color:#fff}
+.refresh-status{font-size:10px;color:rgba(255,255,255,0.3);white-space:nowrap}
+.export-dropdown{position:absolute;top:calc(100% + 5px);right:0;background:#1e3060;border:1px solid rgba(91,156,246,0.35);border-radius:8px;min-width:205px;z-index:999;box-shadow:0 6px 24px rgba(0,0,0,0.4);overflow:hidden;display:none}
+.export-dropdown.open{display:block}
+.export-opt{padding:8px 13px;font-size:12px;color:rgba(255,255,255,0.7);cursor:pointer;display:flex;align-items:center;gap:8px;transition:background 0.1s}
+.export-opt:hover{background:rgba(91,156,246,0.2);color:#fff}
+.export-opt.danger:hover{background:rgba(232,64,64,0.2)}
+.export-opt-sub{font-size:10px;color:rgba(255,255,255,0.3);display:block;margin-top:1px}
+.export-divider{height:1px;background:rgba(255,255,255,0.07);margin:2px 0}
+.layout{display:flex;height:calc(100vh - 74px)}
+#pageAlert{height:calc(100vh - 74px)!important}
+.sidebar{width:280px;min-width:240px;background:#fff;border-right:1px solid #e0e0e0;display:flex;flex-direction:column;overflow:hidden}
+.sidebar-top{padding:9px;border-bottom:1px solid #e8e8e8;display:flex;flex-direction:column;gap:6px}
+select,input[type=text],input[type=date]{width:100%;height:30px;padding:0 8px;border:1px solid #d0d0d0;border-radius:5px;background:#fff;color:#1a1a1a;font-size:12px;outline:none}
 select:focus,input:focus{border-color:#3a7bd5}
-.motor-count{font-size:11px;color:#888;padding:5px 12px;background:#f9f9f9;border-bottom:1px solid #eee}
+.motor-count{font-size:11px;color:#888;padding:4px 11px;background:#f9f9f9;border-bottom:1px solid #eee}
 .motor-list{flex:1;overflow-y:auto}
-.motor-item{padding:8px 12px;border-bottom:1px solid #f0f0f0;cursor:pointer;transition:background 0.1s}
+.motor-item{padding:7px 11px;border-bottom:1px solid #f0f0f0;cursor:pointer;transition:background 0.1s}
 .motor-item:hover{background:#f5f8ff}
 .motor-item.active{background:#ebf2ff;border-left:3px solid #3a7bd5}
 .motor-item:not(.active){border-left:3px solid transparent}
 .m-tag{font-size:12px;font-weight:700;color:#1a2a4a}
 .m-desc{font-size:11px;color:#555;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .m-meta{font-size:10px;color:#999;margin-top:1px}
-.m-source{display:inline-block;font-size:9px;font-weight:700;padding:1px 5px;border-radius:3px;margin-right:4px}
-.src-cp{background:#e8f0fe;color:#1a73e8}
-.src-ssp{background:#e6f4ea;color:#137333}
-.src-bio{background:#fef7e0;color:#b05800}
-
-/* ── Main trend area ── */
+.m-src{display:inline-block;font-size:9px;font-weight:700;padding:1px 5px;border-radius:3px;margin-right:3px}
+.s-cp{background:#e8f0fe;color:#1a73e8}.s-ssp{background:#e6f4ea;color:#137333}.s-bio{background:#fef7e0;color:#b05800}
 .main{flex:1;display:flex;flex-direction:column;overflow:hidden}
-.chart-header{padding:10px 18px 0;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-.chart-title{font-size:14px;font-weight:700;color:#1a2a4a}
+.chart-header{padding:9px 16px 0;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.chart-title{font-size:13px;font-weight:700;color:#1a2a4a}
 .chart-sub{font-size:12px;color:#666}
-.toolbar{padding:7px 18px;display:flex;flex-wrap:wrap;gap:7px;align-items:center;border-bottom:1px solid #e8e8e8;background:#fafafa}
-.tool-group{display:flex;align-items:center;gap:6px;background:#f0f3f9;padding:4px 10px;border-radius:7px;border:1px solid #dde3f0;flex-wrap:wrap}
-.tool-group label{font-size:11px;font-weight:600;color:#444;white-space:nowrap}
-.btn-row{display:flex;gap:3px}
-.btn{padding:3px 10px;border-radius:4px;border:1px solid #c5c9d4;background:#fff;cursor:pointer;font-size:11px;color:#555;transition:all 0.12s;white-space:nowrap;line-height:1.6}
+.toolbar{padding:6px 16px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;border-bottom:1px solid #e8e8e8;background:#fafafa}
+.tg{display:flex;align-items:center;gap:5px;background:#f0f3f9;padding:3px 9px;border-radius:6px;border:1px solid #dde3f0;flex-wrap:wrap}
+.tg label{font-size:11px;font-weight:600;color:#444;white-space:nowrap}
+.br{display:flex;gap:2px}
+.btn{padding:2px 9px;border-radius:4px;border:1px solid #c5c9d4;background:#fff;cursor:pointer;font-size:11px;color:#555;transition:all 0.12s;white-space:nowrap;line-height:1.6}
 .btn:hover{background:#ebf2ff;border-color:#3a7bd5;color:#3a7bd5}
-.btn.on-blue{background:#3a7bd5;border-color:#3a7bd5;color:#fff;font-weight:600}
-.btn.on-red{background:#e84040;border-color:#e84040;color:#fff;font-weight:600}
-.btn.on-green{background:#27ae60;border-color:#27ae60;color:#fff;font-weight:600}
-.date-pair{display:flex;align-items:center;gap:4px}
-.date-pair input[type=date]{width:120px;height:26px;font-size:11px}
-.range-info{font-size:10px;color:#3a7bd5;background:#ebf2ff;padding:2px 7px;border-radius:8px;white-space:nowrap}
-.stats{display:flex;gap:7px;padding:7px 18px 0;flex-wrap:wrap}
-.stat{background:#fff;border:1px solid #e8e8e8;border-radius:7px;padding:6px 11px;flex:1;min-width:75px;text-align:center}
-.stat-label{font-size:9px;color:#999;text-transform:uppercase;letter-spacing:0.4px}
-.stat-val{font-size:16px;font-weight:700;color:#1a2a4a;margin-top:1px}
-.stat-val.warn{color:#e84040}
-.stat-val.ok{color:#27ae60}
-.legend-row{display:flex;gap:12px;padding:4px 18px;flex-wrap:wrap;align-items:center}
+.on-b{background:#3a7bd5;border-color:#3a7bd5;color:#fff;font-weight:600}
+.on-r{background:#e84040;border-color:#e84040;color:#fff;font-weight:600}
+.on-g{background:#27ae60;border-color:#27ae60;color:#fff;font-weight:600}
+.dp{display:flex;align-items:center;gap:3px}
+.dp input[type=date]{width:115px;height:24px;font-size:11px}
+.ri{font-size:10px;color:#3a7bd5;background:#ebf2ff;padding:1px 6px;border-radius:7px;white-space:nowrap}
+.stats{display:flex;gap:6px;padding:6px 16px 0;flex-wrap:wrap}
+.stat{background:#fff;border:1px solid #e8e8e8;border-radius:6px;padding:5px 10px;flex:1;min-width:70px;text-align:center}
+.sl{font-size:9px;color:#999;text-transform:uppercase;letter-spacing:0.4px}
+.sv{font-size:15px;font-weight:700;color:#1a2a4a;margin-top:1px}
+.sv.warn{color:#e84040}.sv.ok{color:#27ae60}
+.legend-row{display:flex;gap:10px;padding:3px 16px;flex-wrap:wrap;align-items:center}
 .leg{display:flex;align-items:center;gap:4px;font-size:10px;color:#555}
-.leg-line{width:18px;height:2px;border-radius:1px;display:inline-block}
-.badge{display:inline-block;font-size:10px;padding:2px 8px;border-radius:8px;font-weight:600}
-.badge-warn{background:#ffe0e0;color:#c0392b}
-.badge-ok{background:#e0f5e9;color:#27ae60}
-.chart-wrap{flex:1;padding:6px 18px 12px;position:relative;min-height:0}
+.ll{width:16px;height:2px;border-radius:1px;display:inline-block}
+.bdg{display:inline-block;font-size:10px;padding:2px 7px;border-radius:7px;font-weight:600}
+.bdg-w{background:#ffe0e0;color:#c0392b}.bdg-ok{background:#e0f5e9;color:#27ae60}
+.chart-wrap{flex:1;padding:5px 16px 10px;position:relative;min-height:0}
 .chart-wrap canvas{width:100%!important;height:100%!important}
-.empty{display:flex;align-items:center;justify-content:center;flex:1;color:#bbb;font-size:14px;flex-direction:column;gap:8px}
-.empty-icon{font-size:36px;opacity:0.25}
-
-/* ── OC Alert tab ── */
-.alert-page{flex:1;display:flex;flex-direction:column;overflow:hidden;background:#f7f8fb}
-.alert-top{padding:10px 18px;background:#fff;border-bottom:1px solid #e0e0e0;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
-.alert-top h2{font-size:14px;font-weight:700;color:#1a2a4a}
-.summary-pills{display:flex;gap:7px;flex-wrap:wrap;margin-left:auto;align-items:center}
-.pill{padding:4px 12px;border-radius:16px;font-size:11px;font-weight:600;border:1px solid}
-.pill-red{background:#ffe8e8;color:#c0392b;border-color:#f5c0c0}
-.pill-green{background:#e8f8ee;color:#1e8449;border-color:#a9dfbf}
-.pill-gray{background:#f0f0f0;color:#666;border-color:#ddd}
-.alert-body{flex:1;overflow-y:auto;padding:12px 16px;display:flex;flex-direction:column;gap:10px}
-.alert-group{background:#fff;border-radius:9px;border:1px solid #e4e4e4;overflow:hidden}
-.alert-group-hdr{padding:9px 14px;background:#f4f6fb;border-bottom:1px solid #e8eaf0;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none}
-.alert-group-hdr:hover{background:#edf1fb}
-.grp-name{font-size:12px;font-weight:700;color:#1a2a4a}
-.grp-pills{display:flex;gap:6px;margin-left:auto;align-items:center}
-.grp-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:6px}
-.grp-badge-warn{background:#ffe0e0;color:#c0392b}
-.grp-badge-ok{background:#e8f8ee;color:#1e8449}
-.grp-toggle{font-size:11px;color:#888;margin-left:4px;transition:transform 0.2s}
-.grp-toggle.open{transform:rotate(0deg)}
-.alert-motor-list{display:none}
-.alert-motor-list.open{display:block}
-.alert-row{padding:9px 14px;border-bottom:1px solid #f5f5f5;display:flex;gap:10px;align-items:flex-start;cursor:pointer;transition:background 0.1s}
-.alert-row:last-child{border-bottom:none}
-.alert-row:hover{background:#fff8f0}
-.alert-row.no-oc{cursor:default}
-.alert-row.no-oc:hover{background:#f9fffe}
-.ar-left{min-width:0;flex:1}
-.ar-tag{font-size:12px;font-weight:700;color:#1a2a4a}
-.ar-desc{font-size:11px;color:#555;margin-top:1px}
-.ar-meta{font-size:10px;color:#bbb;margin-top:1px}
-.breach-wrap{margin-top:5px;display:flex;flex-wrap:wrap;gap:3px}
-.breach-chip{font-size:10px;background:#fff0f0;color:#c0392b;border:1px solid #fac8c8;padding:2px 6px;border-radius:3px;white-space:nowrap}
-.view-trend-btn{margin-top:5px;font-size:10px;color:#fff;background:#3a7bd5;border:none;padding:3px 10px;border-radius:4px;cursor:pointer;font-weight:600;display:inline-block}
-.view-trend-btn:hover{background:#2d63b5}
-.ar-right{text-align:right;min-width:70px;flex-shrink:0}
-.oc-num{font-size:20px;font-weight:800;color:#e84040;line-height:1}
-.oc-num.zero{color:#27ae60;font-size:14px;font-weight:600}
-.oc-num-lbl{font-size:9px;color:#bbb;margin-top:2px}
-
-/* ── Export JSON ── */
-.export-wrap{display:flex;align-items:center;margin-left:auto;padding-right:6px;position:relative}
-.export-btn{display:flex;align-items:center;gap:6px;padding:5px 13px;background:rgba(91,156,246,0.15);border:1px solid rgba(91,156,246,0.4);border-radius:6px;color:#a8c8fa;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.15s;white-space:nowrap}
-.export-btn:hover{background:rgba(91,156,246,0.28);border-color:#5b9cf6;color:#fff}
-.export-dropdown{position:absolute;top:calc(100% + 6px);right:0;background:#1e3060;border:1px solid rgba(91,156,246,0.35);border-radius:8px;min-width:190px;z-index:999;box-shadow:0 6px 24px rgba(0,0,0,0.4);overflow:hidden;display:none}
-.export-dropdown.open{display:block}
-.export-opt{padding:9px 14px;font-size:12px;color:rgba(255,255,255,0.75);cursor:pointer;display:flex;align-items:center;gap:8px;transition:background 0.1s}
-.export-opt:hover{background:rgba(91,156,246,0.2);color:#fff}
-.export-opt-icon{font-size:14px;width:18px;text-align:center}
-.export-opt-sub{font-size:10px;color:rgba(255,255,255,0.35);display:block;margin-top:1px}
-.export-divider{height:1px;background:rgba(255,255,255,0.08);margin:3px 0}
-
-/* ── Refresh button ── */
-.refresh-btn{display:flex;align-items:center;gap:6px;padding:5px 13px;background:rgba(39,174,96,0.15);border:1px solid rgba(39,174,96,0.4);border-radius:6px;color:#7dcea0;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.15s;white-space:nowrap;margin-right:6px}
-.refresh-btn:hover{background:rgba(39,174,96,0.28);border-color:#27ae60;color:#fff}
-.refresh-btn.loading{opacity:0.6;pointer-events:none}
-.refresh-status{font-size:10px;color:rgba(255,255,255,0.35);white-space:nowrap;margin-right:8px}
+.empty{display:flex;align-items:center;justify-content:center;flex:1;color:#bbb;font-size:13px;flex-direction:column;gap:8px;text-align:center;padding:20px}
+.empty-icon{font-size:32px;opacity:0.22}
+/* ── OC Alert Tab ── */
+.alert-top{padding:8px 14px;background:#fff;border-bottom:1px solid #e0e0e0;display:flex;flex-direction:column;gap:6px}
+.alert-toolbar{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.alert-toolbar2{display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding-top:2px;border-top:1px solid #f0f0f0}
+.spills{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-left:auto}
+.pill{padding:3px 10px;border-radius:14px;font-size:11px;font-weight:600;border:1px solid}
+.p-r{background:#ffe8e8;color:#c0392b;border-color:#f5c0c0}
+.p-g{background:#e8f8ee;color:#1e8449;border-color:#a9dfbf}
+.p-gr{background:#f0f0f0;color:#666;border-color:#ddd}
+.p-or{background:#fff3e0;color:#e65100;border-color:#ffcc80}
+.alert-body{flex:1;overflow-y:auto;padding:10px 14px;display:flex;flex-direction:column;gap:8px}
+/* group card */
+.ag{background:#fff;border-radius:8px;border:1px solid #e4e4e4;overflow:hidden}
+.agh{padding:8px 13px;background:#f4f6fb;border-bottom:1px solid #e8eaf0;display:flex;align-items:center;gap:7px;cursor:pointer;user-select:none}
+.agh:hover{background:#edf1fb}
+.gn{font-size:12px;font-weight:700;color:#1a2a4a}
+.gp{display:flex;gap:5px;margin-left:auto;align-items:center}
+.gb{font-size:10px;font-weight:700;padding:2px 7px;border-radius:5px}
+.gb-w{background:#ffe0e0;color:#c0392b}.gb-ok{background:#e8f8ee;color:#1e8449}
+.gt{font-size:11px;color:#888;margin-left:3px}
+.aml{display:none}.aml.open{display:block}
+/* motor alert row */
+.ar{padding:9px 13px;border-bottom:1px solid #f5f5f5;display:flex;gap:10px;align-items:stretch;transition:background 0.1s}
+.ar:last-child{border-bottom:none}
+.ar:hover{background:#fff8f0}
+.ar.no-oc:hover{background:#f7fffb}
+.arl{min-width:0;flex:1}
+.art{font-size:12px;font-weight:700;color:#1a2a4a;display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.ard{font-size:11px;color:#555;margin-top:1px}
+.arm{font-size:10px;color:#bbb;margin-top:2px}
+/* latest reading bar */
+.ar-reading{margin-top:5px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.ar-reading-val{font-size:13px;font-weight:700}
+.ar-reading-val.over{color:#e84040}
+.ar-reading-val.ok{color:#27ae60}
+.ar-reading-meta{font-size:10px;color:#888}
+.ar-bar-wrap{flex:1;min-width:80px;max-width:200px;height:5px;background:#eee;border-radius:3px;overflow:hidden}
+.ar-bar{height:100%;border-radius:3px;transition:width 0.3s}
+.ar-bar.over{background:linear-gradient(90deg,#f39c12,#e84040)}
+.ar-bar.ok{background:#27ae60}
+/* streak badge */
+.streak-badge{display:inline-flex;align-items:center;gap:3px;padding:1px 7px;border-radius:8px;font-size:10px;font-weight:700;white-space:nowrap}
+.streak-hot{background:#fff0f0;color:#c0392b;border:1px solid #fac8c8}
+.streak-warm{background:#fff8e8;color:#b05800;border:1px solid #f5cc80}
+.streak-ok{background:#e8f8ee;color:#1e8449;border:1px solid #a9dfbf}
+/* trend direction arrow */
+.trend-arrow{font-size:11px;font-weight:700;padding:1px 5px;border-radius:4px}
+.tr-up{color:#e84040;background:#fff0f0}
+.tr-dn{color:#27ae60;background:#e8f8ee}
+.tr-st{color:#888;background:#f0f0f0}
+/* breach chips */
+.bw{margin-top:5px;display:flex;flex-wrap:wrap;gap:3px}
+.bc{font-size:10px;background:#fff0f0;color:#c0392b;border:1px solid #fac8c8;padding:1px 5px;border-radius:3px;white-space:nowrap}
+.bc-old{background:#f9f9f9;color:#aaa;border-color:#e0e0e0}
+/* right column */
+.arr{text-align:right;min-width:70px;flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;justify-content:center;gap:3px}
+.ocn{font-size:22px;font-weight:800;color:#e84040;line-height:1}
+.ocn.zero{color:#27ae60;font-size:14px;font-weight:600}
+.ocl{font-size:9px;color:#bbb}
+.sev-pct{font-size:10px;font-weight:700;color:#e84040}
+.sev-pct.ok{color:#27ae60}
+/* view trend btn */
+.vtb{margin-top:4px;font-size:10px;color:#fff;background:#3a7bd5;border:none;padding:2px 9px;border-radius:3px;cursor:pointer;font-weight:600;display:inline-block}
+.vtb:hover{background:#2d63b5}
+/* copy summary btn */
+.copy-btn{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:5px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid rgba(91,156,246,0.4);background:rgba(91,156,246,0.1);color:#7fb3f5;transition:all 0.15s}
+.copy-btn:hover{background:rgba(91,156,246,0.25);color:#fff}
+.copy-btn.copied{background:rgba(39,174,96,0.2);border-color:rgba(39,174,96,0.4);color:#7dcea0}
+#splash{position:fixed;inset:0;background:#0f1f3a;display:none;flex-direction:column;align-items:center;justify-content:center;z-index:99999;gap:12px}
+#splash h2{color:#fff;font-size:15px;font-weight:600;margin:0}
+#splash p{color:rgba(255,255,255,0.4);font-size:11px;text-align:center;max-width:320px;line-height:1.6;margin:0}
+.sbar-wrap{width:260px;height:5px;background:rgba(255,255,255,0.1);border-radius:3px;overflow:hidden}
+.sbar{height:100%;background:#5b9cf6;border-radius:3px;width:0%;transition:width 0.35s ease}
+#splash-status{font-size:11px;color:rgba(255,255,255,0.35)}
+#diagModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:99998;align-items:center;justify-content:center}
+#diagModal.open{display:flex}
+#diagBox{background:#0f1f3a;border:1px solid rgba(91,156,246,0.35);border-radius:10px;width:92%;max-width:620px;max-height:82vh;overflow:hidden;display:flex;flex-direction:column}
+#diagBox h3{padding:14px 18px;font-size:13px;font-weight:600;color:#fff;border-bottom:1px solid rgba(255,255,255,0.08);margin:0}
+#diagLog{flex:1;overflow-y:auto;padding:12px 18px;font-family:monospace;font-size:11px;color:rgba(255,255,255,0.65);line-height:1.9}
+#diagLog .ok{color:#7dcea0}#diagLog .err{color:#f08080}#diagLog .info{color:#7fb3f5}#diagLog .warn{color:#f0c040}
+#diagBox footer{padding:10px 18px;border-top:1px solid rgba(255,255,255,0.08);display:flex;gap:8px;justify-content:flex-end}
 </style>
 </head>
 <body>
+
+<div id="splash">
+  <h2>Loading MCC Motor Data</h2>
+  <p>Fetching from Google Sheets and saving to local cache…</p>
+  <div class="sbar-wrap"><div class="sbar" id="sbar"></div></div>
+  <div id="splash-status">Connecting…</div>
+</div>
+
+<div id="diagModal">
+  <div id="diagBox">
+    <h3>🔍 Fetch &amp; Parse Diagnostic</h3>
+    <div id="diagLog"></div>
+    <footer>
+      <button class="btn" onclick="runDiag()" style="background:#3a7bd5;border-color:#3a7bd5;color:#fff">Run Again</button>
+      <button class="btn" onclick="document.getElementById('diagModal').classList.remove('open')">Close</button>
+    </footer>
+  </div>
+</div>
 
 <div class="header">
   <div class="header-title">
@@ -152,30 +202,33 @@ select:focus,input:focus{border-color:#3a7bd5}
     <div class="tab active" id="tabTrend" onclick="switchTab('trend')">📈 Motor Trends</div>
     <div class="tab" id="tabAlert" onclick="switchTab('alert')">⚠ OC Alerts <span class="tab-badge zero" id="alertBadge">—</span></div>
   </div>
-  <div class="export-wrap" id="exportWrap">
+  <div class="hdr-right" id="hdrRight">
     <span class="refresh-status" id="refreshStatus"></span>
-    <div class="refresh-btn" id="refreshBtn" onclick="refreshFromSheets()">🔄 Refresh Data</div>
-    <div class="export-btn" onclick="toggleExportMenu()">⬇ Export JSON <span style="font-size:9px;opacity:0.6">▾</span></div>
+    <div class="hdr-btn btn-green" id="refreshBtn" onclick="refreshFromSheets(false)">🔄 Refresh &amp; Merge</div>
+    <div class="hdr-btn btn-blue" onclick="openDiag()">🔍 Diagnose</div>
+    <div class="hdr-btn btn-blue" onclick="toggleExportMenu()">⬇ Export <span style="font-size:9px;opacity:0.6">▾</span></div>
     <div class="export-dropdown" id="exportDropdown">
-      <div class="export-opt" onclick="doExport('all')">
-        <span class="export-opt-icon">📦</span>
-        <div><span>All Motors</span><span class="export-opt-sub">Every motor, all readings</span></div>
-      </div>
+      <div class="export-opt" onclick="doExport('all')"><span>📦</span><div><span>All Motors</span><span class="export-opt-sub">Every motor, all cached readings</span></div></div>
       <div class="export-divider"></div>
-      <div class="export-opt" onclick="doExport('filtered')">
-        <span class="export-opt-icon">🔍</span>
-        <div><span>Current Selection</span><span class="export-opt-sub">Matches current filter / search</span></div>
-      </div>
+      <div class="export-opt" onclick="doExport('filtered')"><span>🔍</span><div><span>Current Selection</span><span class="export-opt-sub">Matches current filter</span></div></div>
       <div class="export-divider"></div>
-      <div class="export-opt" onclick="doExport('oc')">
-        <span class="export-opt-icon">⚠</span>
-        <div><span>OC Motors Only</span><span class="export-opt-sub">Breached threshold motors</span></div>
-      </div>
+      <div class="export-opt" onclick="doExport('oc')"><span>⚠</span><div><span>OC Motors Only</span></div></div>
+      <div class="export-divider"></div>
+      <div class="export-opt danger" onclick="clearCache()"><span>🗑</span><div><span style="color:#ff8080">Clear Local Cache</span><span class="export-opt-sub">Wipe saved data, re-fetch on reload</span></div></div>
     </div>
   </div>
 </div>
 
-<!-- TAB 1: TRENDS -->
+<div id="cacheBar">
+  <span id="cbM"  class="cb-pill cb-info">— motors</span>
+  <span id="cbR"  class="cb-pill cb-info">— readings</span>
+  <span id="cbS"  class="cb-pill cb-ok">Never synced</span>
+  <span class="cb-spacer"></span>
+  <span id="cbAuto" style="font-size:10px;color:rgba(255,255,255,0.3)"></span>
+  <span class="cb-link" onclick="showCacheDetail()">Cache details</span>
+  &nbsp;·&nbsp;<span class="cb-link" onclick="openDiag()">Parse diagnostics</span>
+</div>
+
 <div id="pageTrend" class="layout">
   <div class="sidebar">
     <div class="sidebar-top">
@@ -192,685 +245,1138 @@ select:focus,input:focus{border-color:#3a7bd5}
     <div class="motor-list" id="motorList"></div>
   </div>
   <div class="main" id="mainArea">
-  <div class="empty">
-    <div class="empty-icon">⏳</div>
-    <div>Fetching live motor data from Google Sheets…</div>
+    <div class="empty"><div class="empty-icon">⚡</div><div>Select a motor to view its current trend</div></div>
   </div>
 </div>
 
-
-  </div>
-</div>
-
-<!-- TAB 2: OC ALERTS -->
-<div id="pageAlert" style="display:none;height:calc(100vh - 50px);flex-direction:column">
+<div id="pageAlert" style="display:none;height:calc(100vh - 74px);flex-direction:column">
   <div class="alert-top">
-    <h2>OC Alert Summary</h2>
-    <div class="tool-group" style="margin-left:0">
-      <label>Threshold:</label>
-      <div class="btn-row">
-        <button class="btn on-red" id="alertBtn11" onclick="setAlertOC(1.1)">×1.1</button>
-        <button class="btn" id="alertBtn12" onclick="setAlertOC(1.2)">×1.2</button>
+    <!-- Row 1: threshold + range + summary pills -->
+    <div class="alert-toolbar">
+      <div class="tg" style="margin-left:0">
+        <label>Threshold:</label>
+        <div class="br">
+          <button class="btn on-r" id="aBtn11" onclick="setAlertOC(1.1)">×1.1</button>
+          <button class="btn"      id="aBtn12" onclick="setAlertOC(1.2)">×1.2</button>
+        </div>
       </div>
+      <div class="tg">
+        <label>Range:</label>
+        <div class="br">
+          <button class="btn" id="arBtn1w"  onclick="setAlertRange('1w')">1W</button>
+          <button class="btn" id="arBtn1m"  onclick="setAlertRange('1m')">1M</button>
+          <button class="btn" id="arBtn3m"  onclick="setAlertRange('3m')">3M</button>
+          <button class="btn" id="arBtn6m"  onclick="setAlertRange('6m')">6M</button>
+          <button class="btn on-b" id="arBtnAll" onclick="setAlertRange('all')">All</button>
+        </div>
+      </div>
+      <div class="tg">
+        <label>Custom:</label>
+        <div class="dp">
+          <input type="date" id="arFrom" onchange="setAlertRange('custom')">
+          <span style="font-size:11px;color:#888">→</span>
+          <input type="date" id="arTo"   onchange="setAlertRange('custom')">
+        </div>
+      </div>
+      <div class="spills" id="summaryPills"></div>
     </div>
-    <div class="summary-pills" id="summaryPills"></div>
+    <!-- Row 2: group filter + sort + show-OK + copy -->
+    <div class="alert-toolbar2">
+      <div class="tg">
+        <label>Group:</label>
+        <select id="alertGroupSel" style="height:26px;font-size:11px;width:auto;min-width:130px" onchange="renderAlertPage()">
+          <option value="">All groups</option>
+        </select>
+      </div>
+      <div class="tg">
+        <label>Sort:</label>
+        <div class="br">
+          <button class="btn on-b" id="sortBtnSev"   onclick="setAlertSort('severity')">Severity %</button>
+          <button class="btn"      id="sortBtnCount" onclick="setAlertSort('count')">OC Count</button>
+          <button class="btn"      id="sortBtnStreak" onclick="setAlertSort('streak')">Streak</button>
+        </div>
+      </div>
+      <div class="tg">
+        <label style="cursor:pointer">
+          <input type="checkbox" id="showOKchk" onchange="renderAlertPage()" style="width:auto;height:auto;margin-right:3px">
+          Show OK motors
+        </label>
+      </div>
+      <button class="copy-btn" id="copyBtn" onclick="copySummary()">📋 Copy Summary</button>
+    </div>
   </div>
   <div class="alert-body" id="alertBody"></div>
 </div>
 
+<div class="author-bar">
+  Made by &nbsp;<span>SamiUddin Ahmed Zia</span>&nbsp;|&nbsp;E &amp; I Dept&nbsp;|&nbsp;Ismail Resin (Pvt) Ltd
+</div>
+
 <script>
-window._dashboardInit = function(MOTOR_DATA) {
-const motors = MOTOR_DATA.motors || [];
+// ═══════════════════════════════════════════════════════
+// CONFIG
+// ═══════════════════════════════════════════════════════
+const LS_KEY   = 'mcc_motors_v8';
+const META_KEY = 'mcc_meta_v8';
+const AUTO_REFRESH_H = 24;
 
-// ── State ──────────────────────────────────────────────────────
-let selectedIdx   = null;
-let chart         = null;
-let ocMultiplier  = 1.1;
-let alertOCMult   = 1.1;
-let dateRangeMode = 'all';
-let shiftMode     = 'avg';   // avg | A | B | C
-let customFrom    = null;
-let customTo      = null;
-let activeTab     = 'trend';
+// Sheet structure constants (confirmed from screenshot):
+// Row 0 (idx): form number row
+// Row 1 (idx): title row
+// Row 2 (idx): blank
+// Row 3 (idx): DATE headers — col 8 onward, every 3 cols  ← DATE_ROW
+// Row 4 (idx): SHIFT A / SHIFT B / SHIFT C headers         ← SHIFT_ROW
+// Row 5 (idx): "Current" labels
+// Row 6 (idx): "Amp" / unit labels
+// Row 7 (idx): DATA starts                                  ← DATA_START_ROW
+// Col 0: S NO, 1: tag, 2: desc, 3: MCC, 4: kW, 5: rated_A, 6: elevation, 7: blank spacer
+// Col 7+: data in triplets (Shift A, Shift B, Shift C) per date
+// firstDataCol is AUTO-DETECTED at runtime by scanning SHIFT_ROW for first "SHIFT A"
+const DATE_ROW   = 3;
+const SHIFT_ROW  = 4;
+const DATA_START = 7;
+const TAG_COL    = 1;
+const DESC_COL   = 2;
+const MCC_COL    = 3;
+const RATED_COL  = 5;
 
-// ── Groups ────────────────────────────────────────────────────
-const ALL_GROUPS = [...new Set(motors.map(m=>m.group))].sort();
-const grpSel = document.getElementById('groupSel');
-ALL_GROUPS.forEach(g => {
-  const o = document.createElement('option');
-  o.value = g; o.textContent = g + ' (' + motors.filter(m=>m.group===g).length + ')';
-  grpSel.appendChild(o);
-});
-document.getElementById('hdrSub').textContent = motors.length + ' motors · CP Current + SSP1 + Biomass 1';
-
-// ── Date parsing ──────────────────────────────────────────────
-const MON = {jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,oct:9,nov:10,dec:11};
-function parseDate(str) {
-  if (!str) return null;
-  const m = str.trim().match(/(\d+)[a-z]*\s+([A-Za-z]+)[,\s]+(\d{2,4})/i)
-           || str.trim().match(/(\d+)\s+([A-Za-z]+)\s+(\d{2,4})/i);
-  if (!m) return null;
-  const mon = MON[m[2].toLowerCase().substring(0,3)];
-  if (mon === undefined) return null;
-  let yr = parseInt(m[3]);
-  if (yr < 100) yr += 2000;
-  return new Date(yr, mon, parseInt(m[1]));
-}
-
-// ── Shift value extraction ────────────────────────────────────
-function getShiftValue(shifts) {
-  if (shiftMode === 'avg') {
-    const vals = Object.values(shifts).filter(v => v > 0);
-    return vals.length ? +(vals.reduce((a,b)=>a+b,0)/vals.length).toFixed(3) : null;
-  }
-  return shifts[shiftMode] !== undefined ? shifts[shiftMode] : null;
-}
-
-function buildSeries(m) {
-  const filtered = filterByRange(m.readings);
-  const dates = [], vals = [];
-  for (const [date, shifts] of Object.entries(filtered)) {
-    const v = getShiftValue(shifts);
-    if (v !== null) { dates.push(date); vals.push(v); }
-  }
-  return { dates, vals };
-}
-
-// ── Date range filtering ──────────────────────────────────────
-function filterByRange(readings) {
-  if (dateRangeMode === 'all') return readings;
-  const entries = Object.entries(readings).map(([d,s])=>({d,s,t:parseDate(d)})).filter(x=>x.t);
-  if (!entries.length) return readings;
-  const latest = new Date(Math.max(...entries.map(x=>x.t)));
-  let from=null, to=latest;
-  if (dateRangeMode==='custom') {
-    from = customFrom ? new Date(customFrom) : null;
-    to   = customTo   ? new Date(customTo)   : latest;
-  } else {
-    const days={'1w':7,'2w':14,'1m':30,'2m':61,'3m':92,'6m':183}[dateRangeMode];
-    from = new Date(latest); from.setDate(from.getDate()-days);
-  }
-  const out={};
-  entries.forEach(({d,s,t}) => { if((!from||t>=from)&&t<=to) out[d]=s; });
-  return Object.keys(out).length ? out : readings;
-}
-
-// ── Tab switching ─────────────────────────────────────────────
-window.switchTab = function switchTab(tab) {
-  activeTab = tab;
-  document.getElementById('pageTrend').style.display  = tab==='trend' ? 'flex' : 'none';
-  const ap = document.getElementById('pageAlert');
-  ap.style.display = tab==='alert' ? 'flex' : 'none';
-  document.getElementById('tabTrend').classList.toggle('active', tab==='trend');
-  document.getElementById('tabAlert').classList.toggle('active', tab==='alert');
-  if (tab==='alert') renderAlertPage();
-}
-
-// ── Sidebar ───────────────────────────────────────────────────
-function srcClass(src) {
-  if (src==='CP Current') return 'src-cp';
-  if (src==='SSP1') return 'src-ssp';
-  return 'src-bio';
-}
-function srcShort(src) {
-  if (src==='CP Current') return 'CP';
-  if (src==='SSP1') return 'SSP1';
-  return 'BIO';
-}
-
-function getVisible() {
-  const src = document.getElementById('sourceSel').value;
-  const g   = grpSel.value;
-  const q   = document.getElementById('search').value.toLowerCase().trim();
-  return motors.map((m,i)=>({m,i})).filter(({m}) =>
-    (!src || m.source===src) &&
-    (!g   || m.group===g) &&
-    (!q   || m.tag.toLowerCase().includes(q) || m.description.toLowerCase().includes(q))
-  );
-}
-
-function renderList() {
-  const visible = getVisible();
-  document.getElementById('motorCount').textContent = visible.length + ' motor'+(visible.length!==1?'s':'')+' shown';
-  const list = document.getElementById('motorList');
-  list.innerHTML = '';
-  visible.forEach(({m,i}) => {
-    const div = document.createElement('div');
-    div.className = 'motor-item'+(i===selectedIdx?' active':'');
-    const pts = Object.keys(m.readings).length;
-    div.innerHTML = `<div class="m-tag"><span class="m-source ${srcClass(m.source)}">${srcShort(m.source)}</span>${m.tag}</div><div class="m-desc" title="${m.description}">${m.description}</div><div class="m-meta">${m.mcc} · ${pts} days</div>`;
-    div.onclick = () => { selectedIdx=i; renderList(); showMotor(m); };
-    list.appendChild(div);
-  });
-}
-
-// ── Trend chart ───────────────────────────────────────────────
-function rangeLabel() {
-  return {'all':'All time','1w':'1 Week','2w':'2 Weeks','1m':'1 Month','2m':'2 Months','3m':'3 Months','6m':'6 Months','custom':'Custom'}[dateRangeMode]||dateRangeMode;
-}
-
-function showMotor(m) {
-  const { dates, vals } = buildSeries(m);
-  const rated   = m.rated_current || null;
-  const oc1     = rated ? +(rated*1.1).toFixed(3) : null;
-  const oc2     = rated ? +(rated*1.2).toFixed(3) : null;
-  const activeOC = ocMultiplier===1.1 ? oc1 : oc2;
-  const avg = vals.length ? (vals.reduce((a,b)=>a+b,0)/vals.length) : 0;
-  const mn  = vals.length ? Math.min(...vals) : 0;
-  const mx  = vals.length ? Math.max(...vals) : 0;
-  const exc = activeOC ? vals.filter(v=>v>activeOC).length : 0;
-
-  const shiftBtns = ['avg','A','B','C'].map(s =>
-    `<button class="btn ${shiftMode===s?'on-green':''}" onclick="setShift('${s}')">${s==='avg'?'Avg (A+B+C)':'Shift '+s}</button>`
-  ).join('');
-
-  document.getElementById('mainArea').innerHTML = `
-    <div class="chart-header">
-      <div>
-        <span class="chart-title"><span class="m-source ${srcClass(m.source)}" style="font-size:10px;padding:2px 6px;border-radius:3px;margin-right:5px">${m.source}</span>${m.tag}</span>
-        <span class="chart-sub">${m.description} · MCC: ${m.mcc}</span>
-      </div>
-    </div>
-    <div class="toolbar">
-      <div class="tool-group">
-        <label>View:</label>
-        <div class="btn-row">${shiftBtns}</div>
-      </div>
-      <div class="tool-group">
-        <label>Range:</label>
-        <div class="btn-row">
-          <button class="btn ${dateRangeMode==='1w'?'on-blue':''}"  onclick="setRange('1w')">1W</button>
-          <button class="btn ${dateRangeMode==='2w'?'on-blue':''}"  onclick="setRange('2w')">2W</button>
-          <button class="btn ${dateRangeMode==='1m'?'on-blue':''}"  onclick="setRange('1m')">1M</button>
-          <button class="btn ${dateRangeMode==='2m'?'on-blue':''}"  onclick="setRange('2m')">2M</button>
-          <button class="btn ${dateRangeMode==='3m'?'on-blue':''}"  onclick="setRange('3m')">3M</button>
-          <button class="btn ${dateRangeMode==='6m'?'on-blue':''}"  onclick="setRange('6m')">6M</button>
-          <button class="btn ${dateRangeMode==='all'?'on-blue':''}" onclick="setRange('all')">All</button>
-        </div>
-      </div>
-      <div class="tool-group">
-        <label>Custom:</label>
-        <div class="date-pair">
-          <input type="date" id="dateFrom" value="${customFrom||''}" onchange="setCustomRange()">
-          <span style="font-size:11px;color:#888">→</span>
-          <input type="date" id="dateTo" value="${customTo||''}" onchange="setCustomRange()">
-        </div>
-        <span class="range-info">${dates.length} pts · ${rangeLabel()}</span>
-      </div>
-      <div class="tool-group">
-        <label>OC:</label>
-        <div class="btn-row">
-          <button class="btn ${ocMultiplier===1.1?'on-red':''}" onclick="setOC(1.1)">×1.1 ${oc1?'('+oc1.toFixed(2)+'A)':''}</button>
-          <button class="btn ${ocMultiplier===1.2?'on-red':''}" onclick="setOC(1.2)">×1.2 ${oc2?'('+oc2.toFixed(2)+'A)':''}</button>
-        </div>
-      </div>
-    </div>
-    <div class="stats">
-      <div class="stat"><div class="stat-label">Avg</div><div class="stat-val">${avg.toFixed(2)}A</div></div>
-      <div class="stat"><div class="stat-label">Min</div><div class="stat-val">${mn.toFixed(2)}A</div></div>
-      <div class="stat"><div class="stat-label">Max</div><div class="stat-val ${activeOC&&mx>activeOC?'warn':''}">${mx.toFixed(2)}A</div></div>
-      <div class="stat"><div class="stat-label">Rated</div><div class="stat-val">${rated||'—'}A</div></div>
-      <div class="stat"><div class="stat-label">OC Limit</div><div class="stat-val">${activeOC?activeOC.toFixed(2)+'A':'—'}</div></div>
-      <div class="stat"><div class="stat-label">OC Events</div><div class="stat-val ${exc>0?'warn':'ok'}">${exc} ${exc>0?'⚠':'✓'}</div></div>
-      <div class="stat"><div class="stat-label">Viewing</div><div class="stat-val" style="font-size:12px">${shiftMode==='avg'?'Avg':'Shift '+shiftMode}</div></div>
-    </div>
-    <div class="legend-row">
-      <span class="leg"><span class="leg-line" style="background:#3a7bd5;display:inline-block"></span>${shiftMode==='avg'?'Avg current':'Shift '+shiftMode+' current'}</span>
-      ${rated?`<span class="leg"><span class="leg-line" style="border-top:2px dashed #f39c12;background:none"></span>Rated (${rated}A)</span>`:''}
-      ${activeOC?`<span class="leg"><span class="leg-line" style="border-top:2px dashed #e84040;background:none"></span>OC ×${ocMultiplier} (${activeOC.toFixed(2)}A)</span>`:''}
-      ${exc>0?`<span class="badge badge-warn">⚠ ${exc} OC events</span>`:`<span class="badge badge-ok">✓ No OC events</span>`}
-    </div>
-    <div class="chart-wrap"><canvas id="trendChart" role="img" aria-label="Current trend for ${m.tag}"></canvas></div>
-  `;
-
-  renderChart(dates, vals, rated, activeOC);
-}
-
-function renderChart(dates, vals, rated, activeOC) {
-  if (chart) { chart.destroy(); chart=null; }
-  const ctx = document.getElementById('trendChart');
-  if (!ctx) return;
-  const datasets = [{
-    label:'Current (A)', data:vals, borderColor:'#3a7bd5',
-    backgroundColor:'rgba(58,123,213,0.07)', borderWidth:1.5,
-    pointRadius:dates.length>80?0:3, pointHoverRadius:5, fill:true, tension:0.3, order:1
-  }];
-  if (rated) datasets.push({
-    label:`Rated (${rated}A)`, data:Array(dates.length).fill(rated),
-    borderColor:'#f39c12', borderWidth:1.5, borderDash:[6,4], pointRadius:0, fill:false, order:2
-  });
-  if (activeOC) datasets.push({
-    label:`OC ×${ocMultiplier} (${activeOC.toFixed(2)}A)`, data:Array(dates.length).fill(activeOC),
-    borderColor:'#e84040', borderWidth:1.5, borderDash:[8,4], pointRadius:0, fill:false, order:3
-  });
-  chart = new Chart(ctx, {
-    type:'line', data:{labels:dates,datasets},
-    options:{
-      responsive:true, maintainAspectRatio:false,
-      interaction:{mode:'index',intersect:false},
-      plugins:{
-        legend:{display:false},
-        tooltip:{callbacks:{label:c=>c.dataset.label+': '+c.parsed.y.toFixed(2)+' A'}}
-      },
-      scales:{
-        x:{ticks:{autoSkip:true,maxTicksLimit:14,maxRotation:40,font:{size:10}},grid:{color:'rgba(0,0,0,0.04)'}},
-        y:{title:{display:true,text:'Current (A)',font:{size:11}},ticks:{font:{size:11}},grid:{color:'rgba(0,0,0,0.05)'}}
-      }
-    }
-  });
-}
-
-// ── OC Alert page ─────────────────────────────────────────────
-function getBreachDates(m, mult) {
-  const rated = m.rated_current;
-  if (!rated) return [];
-  const threshold = rated * mult;
-  const result = [];
-  for (const [date, shifts] of Object.entries(m.readings)) {
-    const vals = Object.values(shifts).filter(v=>v>0);
-    const avg = vals.length ? vals.reduce((a,b)=>a+b,0)/vals.length : 0;
-    if (avg > threshold) result.push(date);
-  }
-  return result;
-}
-
-function renderAlertPage() {
-  const mult = alertOCMult;
-  const results = motors.map((m,i) => ({ m, i, breaches: getBreachDates(m, mult) }));
-  const withOC  = results.filter(r=>r.breaches.length>0);
-  const noOC    = results.filter(r=>r.breaches.length===0 && r.m.rated_current);
-  const unrated = motors.filter(m=>!m.rated_current);
-
-  // Badge
-  const badge = document.getElementById('alertBadge');
-  badge.textContent = withOC.length;
-  badge.className = 'tab-badge'+(withOC.length>0?'':' zero');
-
-  // Pills
-  document.getElementById('summaryPills').innerHTML = `
-    <span class="pill pill-red">⚠ ${withOC.length} with OC</span>
-    <span class="pill pill-green">✓ ${noOC.length} OK</span>
-    <span class="pill pill-gray">— ${unrated.length} unrated</span>
-    <span style="font-size:11px;color:#888">Using ×${mult} threshold (avg of all shifts)</span>
-  `;
-
-  // Group
-  const grouped = {};
-  ALL_GROUPS.forEach(g => grouped[g]=[]);
-  results.forEach(r => { if(grouped[r.m.group]) grouped[r.m.group].push(r); });
-
-  const body = document.getElementById('alertBody');
-  body.innerHTML = '';
-
-  const sortedGroups = Object.entries(grouped)
-    .filter(([,rs])=>rs.length>0)
-    .sort(([,a],[,b]) => b.filter(r=>r.breaches.length>0).length - a.filter(r=>r.breaches.length>0).length);
-
-  sortedGroups.forEach(([grpName, rows]) => {
-    const ocCnt = rows.filter(r=>r.breaches.length>0).length;
-    const grpDiv = document.createElement('div');
-    grpDiv.className = 'alert-group';
-
-    const hdr = document.createElement('div');
-    hdr.className = 'alert-group-hdr';
-    hdr.innerHTML = `
-      <span class="grp-name">${grpName}</span>
-      <span style="font-size:10px;color:#aaa">${rows.length} motors</span>
-      <div class="grp-pills">
-        ${ocCnt>0?`<span class="grp-badge grp-badge-warn">⚠ ${ocCnt} OC</span>`:''}
-        <span class="grp-badge grp-badge-ok">✓ ${rows.length-ocCnt} OK</span>
-        <span class="grp-toggle">${ocCnt>0?'▾':'▸'}</span>
-      </div>`;
-
-    const mList = document.createElement('div');
-    mList.className = 'alert-motor-list'+(ocCnt>0?' open':'');
-
-    rows.sort((a,b)=>b.breaches.length-a.breaches.length);
-
-    rows.forEach(({m, i, breaches}) => {
-      const rated = m.rated_current;
-      const threshold = rated ? (rated*mult).toFixed(2) : null;
-      const row = document.createElement('div');
-      row.className = 'alert-row'+(breaches.length===0?' no-oc':'');
-
-      let breachHTML = '';
-      if (breaches.length > 0) {
-        breachHTML = `<div class="breach-wrap">${breaches.map(d=>`<span class="breach-chip">${d}</span>`).join('')}</div>`;
-      }
-
-      row.innerHTML = `
-        <div class="ar-left">
-          <div class="ar-tag"><span class="m-source ${srcClass(m.source)}" style="font-size:9px;padding:1px 5px;border-radius:3px;margin-right:4px">${srcShort(m.source)}</span>${m.tag}</div>
-          <div class="ar-desc">${m.description}</div>
-          <div class="ar-meta">MCC: ${m.mcc} · Rated: ${rated||'—'}A · OC limit: ${threshold||'—'}A</div>
-          ${breachHTML}
-          ${breaches.length>0?`<button class="view-trend-btn" data-idx="${i}">View trend ↗</button>`:''}
-        </div>
-        <div class="ar-right">
-          <div class="oc-num ${breaches.length===0?'zero':''}">${breaches.length===0?'OK':breaches.length}</div>
-          <div class="oc-num-lbl">${breaches.length===0?'no events':'OC events'}</div>
-        </div>`;
-
-      mList.appendChild(row);
-    });
-
-    hdr.onclick = () => {
-      mList.classList.toggle('open');
-      hdr.querySelector('.grp-toggle').textContent = mList.classList.contains('open')?'▾':'▸';
-    };
-
-    grpDiv.appendChild(hdr);
-    grpDiv.appendChild(mList);
-    body.appendChild(grpDiv);
-  });
-
-  // Delegate click on view-trend buttons
-  body.addEventListener('click', e => {
-    const btn = e.target.closest('.view-trend-btn');
-    if (!btn) return;
-    const idx = parseInt(btn.dataset.idx);
-    goToMotor(idx);
-  }, {once:false});
-}
-
-// ── Controls ──────────────────────────────────────────────────
-window.setOC = (mult) => { ocMultiplier=mult; if(selectedIdx!==null) showMotor(motors[selectedIdx]); };
-window.setShift = (s) => { shiftMode=s; if(selectedIdx!==null) showMotor(motors[selectedIdx]); };
-window.setRange = (mode) => {
-  dateRangeMode=mode;
-  if(mode!=='custom'){customFrom=null;customTo=null;}
-  if(selectedIdx!==null) showMotor(motors[selectedIdx]);
-};
-window.setCustomRange = () => {
-  const f=document.getElementById('dateFrom'), t=document.getElementById('dateTo');
-  if(f&&t&&(f.value||t.value)){
-    customFrom=f.value||null; customTo=t.value||null;
-    dateRangeMode='custom';
-    if(selectedIdx!==null) showMotor(motors[selectedIdx]);
-  }
-};
-window.setAlertOC = (mult) => {
-  alertOCMult=mult;
-  document.getElementById('alertBtn11').className='btn'+(mult===1.1?' on-red':'');
-  document.getElementById('alertBtn12').className='btn'+(mult===1.2?' on-red':'');
-  renderAlertPage();
-};
-window.goToMotor = (idx) => {
-  selectedIdx=idx;
-  // Reset source/group filters to show this motor
-  document.getElementById('sourceSel').value = motors[idx].source;
-  grpSel.value = '';
-  document.getElementById('search').value = '';
-  switchTab('trend');
-  renderList();
-  showMotor(motors[idx]);
-  setTimeout(()=>{
-    const active=document.querySelector('.motor-item.active');
-    if(active) active.scrollIntoView({block:'center',behavior:'smooth'});
-  },120);
-};
-
-// ── Event listeners ───────────────────────────────────────────
-document.getElementById('sourceSel').addEventListener('change', () => { grpSel.value=''; renderList(); });
-grpSel.addEventListener('change', renderList);
-document.getElementById('search').addEventListener('input', renderList);
-
-// ── Init ──────────────────────────────────────────────────────
-function updateAlertBadge() {
-  const cnt = motors.filter(m => {
-    if(!m.rated_current) return false;
-    const thr = m.rated_current * 1.1;
-    return Object.values(m.readings).some(shifts => {
-      const vals = Object.values(shifts).filter(v=>v>0);
-      return vals.length && vals.reduce((a,b)=>a+b,0)/vals.length > thr;
-    });
-  }).length;
-  const badge = document.getElementById('alertBadge');
-  badge.textContent = cnt;
-  badge.className = 'tab-badge'+(cnt>0?'':' zero');
-}
-
-if (motors.length) {
-  renderList();
-  updateAlertBadge();
-  setTimeout(()=>{ const f=document.querySelector('.motor-item'); if(f) f.click(); },120);
-} else {
-  document.getElementById('motorCount').textContent = 'No data loaded';
-  document.getElementById('mainArea').innerHTML = `<div class="empty"><div class="empty-icon">📂</div><div>Place <strong>motors_data.json</strong> in the same folder as this file, then reload.</div></div>`;
-}
-
-// ── Google Sheets Refresh ─────────────────────────────────────
-const SHEET_PUB_ID = '2PACX-1vSTeEwuo6XoJEdtfXySUZAyOr2ZqAZQroziTESVIQZMMUMCuDiwGoJ9a9T739vwrTE_DAGr-Z2zZXGC';
-const SHEET_TABS = [
-  { gid: '0',          label: 'CP Current' },
-  { gid: '2130302060', label: 'SSP1'       },
-  { gid: '692823422',  label: 'Biomass 1'  },
+const SHEET_ID = '2PACX-1vSTeEwuo6XoJEdtfXySUZAyOr2ZqAZQroziTESVIQZMMUMCuDiwGoJ9a9T739vwrTE_DAGr-Z2zZXGC';
+const TABS = [
+  {gid:'0',          label:'CP Current'},
+  {gid:'2130302060', label:'SSP1'},
+  {gid:'692823422',  label:'Biomass 1'},
 ];
 
-function parseCSVRows(csvText) {
-  const lines = csvText.split('\n');
-  return lines.map(line => {
-    const cols = []; let cur = ''; let inQ = false;
-    for (let i = 0; i < line.length; i++) {
-      const c = line[i];
-      if (c === '"') { inQ = !inQ; }
-      else if (c === ',' && !inQ) { cols.push(cur.trim()); cur = ''; }
-      else { cur += c; }
+const PROXIES = [
+  {name:'allorigins',   url:u=>'https://api.allorigins.win/get?url='+encodeURIComponent(u), extract:async r=>{const j=await r.json();return j.contents;}},
+  {name:'corsproxy.io', url:u=>'https://corsproxy.io/?'+encodeURIComponent(u),             extract:async r=>r.text()},
+  {name:'direct',       url:u=>u,                                                            extract:async r=>r.text()},
+];
+
+// ═══════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════
+let motors=[], selectedIdx=null, chart=null;
+let ocMult=1.1, alertOCMult=1.1, dateMode='all', shiftMode='avg';
+let customFrom=null, customTo=null, activeTab='trend';
+let workingProxy=null;
+
+// ═══════════════════════════════════════════════════════
+// CACHE
+// ═══════════════════════════════════════════════════════
+function saveCache(arr){
+  try{
+    localStorage.setItem(LS_KEY,JSON.stringify(arr));
+    localStorage.setItem(META_KEY,JSON.stringify({
+      lastSync:new Date().toISOString(),
+      motorCount:arr.length,
+      totalReadings:arr.reduce((s,m)=>s+Object.keys(m.readings).length,0)
+    }));
+    return true;
+  }catch(e){console.warn('Cache save failed:',e);return false;}
+}
+function loadCache(){try{const r=localStorage.getItem(LS_KEY);return r?JSON.parse(r):null;}catch(e){return null;}}
+function getMeta(){try{const r=localStorage.getItem(META_KEY);return r?JSON.parse(r):null;}catch(e){return null;}}
+function cacheAgeH(){const m=getMeta();return m&&m.lastSync?(Date.now()-new Date(m.lastSync).getTime())/3600000:Infinity;}
+function mergeMotors(existing,incoming){
+  const map={};
+  existing.forEach(m=>{map[m.tag+'|'+m.source]=m;});
+  incoming.forEach(n=>{
+    const k=n.tag+'|'+n.source;
+    if(!map[k]){map[k]=n;return;}
+    Object.entries(n.readings).forEach(([d,s])=>{if(!map[k].readings[d])map[k].readings[d]=s;});
+    if(!map[k].rated_current&&n.rated_current)map[k].rated_current=n.rated_current;
+  });
+  return Object.values(map);
+}
+function updateCacheBar(){
+  const meta=getMeta();
+  if(!meta){document.getElementById('cbM').textContent='0 motors';document.getElementById('cbR').textContent='0 readings';const s=document.getElementById('cbS');s.textContent='No cache';s.className='cb-pill cb-warn';return;}
+  document.getElementById('cbM').textContent=meta.motorCount+' motors cached';
+  document.getElementById('cbR').textContent=(meta.totalReadings||0).toLocaleString()+' readings';
+  const age=cacheAgeH(),d=new Date(meta.lastSync);
+  const ts=d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'})+' '+d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+  const sEl=document.getElementById('cbS');
+  if(age<1){sEl.textContent='✓ Just synced';sEl.className='cb-pill cb-ok';}
+  else if(age<AUTO_REFRESH_H){sEl.textContent='✓ Synced '+Math.floor(age)+'h ago';sEl.className='cb-pill cb-ok';}
+  else{sEl.textContent='⚠ Cache '+Math.round(age)+'h old — '+ts;sEl.className='cb-pill cb-warn';}
+}
+window.showCacheDetail=()=>{const m=getMeta();if(!m){alert('No cache.');return;}const sz=((localStorage.getItem(LS_KEY)||'').length/1024).toFixed(1);alert('Cache Details\n─────────────────\nMotors:    '+m.motorCount+'\nReadings:  '+(m.totalReadings||0).toLocaleString()+'\nLast sync: '+new Date(m.lastSync).toLocaleString('en-GB')+'\nAge:       '+cacheAgeH().toFixed(1)+' h\nSize:      ~'+sz+' KB');};
+window.clearCache=()=>{document.getElementById('exportDropdown').classList.remove('open');if(!confirm('Clear all locally saved motor data?\nPage will reload and re-fetch.'))return;localStorage.removeItem(LS_KEY);localStorage.removeItem(META_KEY);location.reload();};
+
+// ═══════════════════════════════════════════════════════
+// FETCH — tries proxies in order, cache-busts to prevent stale proxy responses
+// ═══════════════════════════════════════════════════════
+async function fetchCSV(url){
+  // Append timestamp to bust any proxy-level caching of old CSV responses
+  const bustUrl = url + '&_t=' + Date.now();
+  const ordered=workingProxy?[workingProxy,...PROXIES.filter(p=>p.name!==workingProxy.name)]:PROXIES;
+  for(const proxy of ordered){
+    try{
+      const proxyUrl = proxy.url(bustUrl);
+      const res=await fetch(proxyUrl,{signal:AbortSignal.timeout(20000)});
+      if(!res.ok)continue;
+      const text=await proxy.extract(res);
+      // Validate: a real sheet CSV will have many commas and be large
+      // If it's under 10KB something is wrong (truncated/error response)
+      if(text && text.length > 10000){
+        workingProxy=proxy;
+        console.log('Proxy "'+proxy.name+'" returned '+text.length+' bytes');
+        return text;
+      } else if(text && text.length > 100) {
+        console.warn('Proxy "'+proxy.name+'" returned only '+text.length+' bytes — may be truncated, trying next');
+      }
+    }catch(e){console.warn('Proxy',proxy.name,'failed:',e.message);}
+  }
+  // Last resort: try without cache-busting in case the parameter breaks some proxies
+  for(const proxy of ordered){
+    try{
+      const res=await fetch(proxy.url(url),{signal:AbortSignal.timeout(20000)});
+      if(!res.ok)continue;
+      const text=await proxy.extract(res);
+      if(text&&text.length>100){workingProxy=proxy;return text;}
+    }catch(e){console.warn('Proxy fallback',proxy.name,'failed:',e.message);}
+  }
+  throw new Error('All proxies failed. Open 🔍 Diagnose for details.');
+}
+
+// ═══════════════════════════════════════════════════════
+// CSV ROW PARSER — RFC 4180 compliant
+// Handles quoted cells with embedded newlines, e.g.:
+//   "Rated current\n(Amp)"  →  single cell value "Rated current\n(Amp)"
+// The old naive split('\n').map() broke whenever a quoted cell contained
+// a real newline, because it split the cell mid-value and made shiftRow
+// only 6 columns long — so the date loop never ran → 0 motors from CP Current.
+// ═══════════════════════════════════════════════════════
+function parseCSVRows(csv){
+  // Normalise line endings to \n
+  const text = csv.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+  const rows = [];
+  let cols = [], cur = '', inQ = false;
+
+  for(let i = 0; i < text.length; i++){
+    const c = text[i];
+
+    if(inQ){
+      if(c === '"'){
+        // Peek ahead: "" inside a quoted cell = escaped quote, not end of cell
+        if(text[i+1] === '"'){ cur += '"'; i++; }
+        else { inQ = false; }  // closing quote
+      } else {
+        cur += c;  // newlines inside quotes are part of the cell value
+      }
+    } else {
+      if(c === '"'){
+        inQ = true;  // opening quote
+      } else if(c === ','){
+        cols.push(cur.trim()); cur = '';
+      } else if(c === '\n'){
+        cols.push(cur.trim());
+        rows.push(cols);
+        cols = []; cur = '';
+      } else {
+        cur += c;
+      }
     }
-    cols.push(cur.trim());
-    return cols;
-  });
+  }
+  // Push final cell and row
+  cols.push(cur.trim());
+  if(cols.some(c => c !== '')) rows.push(cols);
+  return rows;
 }
 
-function getGroupFromMCC(mcc, source) {
-  if (source === 'SSP1')       return 'SSP1';
-  if (source === 'Biomass 1')  return 'Biomass 1';
-  if (!mcc || mcc === 'nan')   return 'Other';
-  if (mcc.startsWith('1MCC'))  return 'CP1 Process';
-  if (/^P[457]/.test(mcc))     return 'Chip Cutters';
-  if (mcc.includes('Compressor')) return 'Compressors';
-  if (mcc.includes('Cool Max'))   return 'Cooling Tower';
-  if (mcc.includes('ETP'))        return 'ETP';
-  if (mcc.includes('Tank Farm'))  return 'Tank Farm';
-  if (mcc.includes('Utility'))    return 'Utility';
-  if (mcc === 'WTA')              return 'WTA';
-  return 'Other';
+// ═══════════════════════════════════════════════════════
+// SHEET PARSER
+// Confirmed sheet layout (from screenshots + CSV analysis):
+//   - DATE_ROW  (3): col 0-6 blank, date strings from col 7+ every 3 cols
+//   - SHIFT_ROW (4): col 0-6 headers, then SHIFT A / SHIFT B / SHIFT C repeating
+//   - DATA_START(7): motor data rows
+//
+// DATE FORMATS found across all 3 sheets (must all match):
+//   '31st Oct 2023'   — ordinal + full year
+//   '29th OCT 23'     — ordinal + 2-digit year
+//   '22ndNov 2024'    — ordinal no space before month
+//   '30 th Dec 2024'  — space inside ordinal
+//   '1-Jul-25'        — hyphen separated, 2-digit year
+//   '1st May2025'     — no space before year
+// One rule covers all: starts with 1-2 digits, contains a 3-letter month abbreviation
+//
+// VALUE CLEANING: operators enter typos like '8..55', '4…45', '.3.8'
+//   → clean by collapsing multiple dots, strip leading/trailing dots, then parseFloat
+//
+// RATED CURRENT COLUMN: differs per sheet
+//   CP Current: col 5 labelled "Rated current (Amp)"
+//   SSP1:       col 5 labelled "Current" (Amp)
+//   Biomass 1:  col 5 labelled "Current" (Amp) — col 6 is kW power, NOT current
+//   → In all cases col 5 is the rated current in Amps; use that for all sheets
+// ═══════════════════════════════════════════════════════
+
+// Matches any cell starting with 1-2 digits that contains a 3-letter month name.
+// Handles every real-world format found in all 3 sheets:
+//   '31st Oct 2023'  '29th OCT 23'  '22ndNov 2024'  '30 th Dec 2024'
+//   '1-Jul-25'  '17-Apr-26'  '1st May2025'  '25thDec 2024'
+const DATE_REGEX = /^\d{1,2}\s*(?:st|nd|rd|th)?\s*[-]?\s*\d{0,2}\s*(?:th|st|nd|rd)?\s*[-]?\s*(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)/i;
+
+// Clean a raw cell value to extract a numeric reading.
+// Handles operator typos: '8..55' → 8.55, '4…45' → 4.45, '.3.8' → 3.8,
+// '36.5.' → 36.5, '4…45' (unicode ellipsis) → 4.45
+// Returns the number if valid and > 0, otherwise null.
+function cleanVal(raw){
+  if(!raw) return null;
+  let s = raw.trim();
+  if(!s) return null;
+  // Replace unicode ellipsis with a dot
+  s = s.replace(/\u2026/g, '.').replace(/…/g, '.');
+  // Collapse two or more consecutive dots into one
+  s = s.replace(/\.{2,}/g, '.');
+  // Strip leading and trailing dots
+  s = s.replace(/^\.+/, '').replace(/\.+$/, '');
+  if(!s) return null;
+  const v = parseFloat(s);
+  // Must be a clean parse (no trailing junk) and positive
+  if(isNaN(v) || v <= 0) return null;
+  // Reject if there's non-numeric junk after the number (e.g. '26.4(breaker)')
+  if(String(v).length < s.replace(/[^0-9.]/g,'').length - 1) return null;
+  return Math.round(v * 1000) / 1000;
 }
 
-function parseSheetCSV(csvText, sourceLabel) {
-  const rows = parseCSVRows(csvText);
-  // Row index 3 (0-based) = date row
-  const dateRow = rows[3] || [];
-  const dateCols = {};
-  dateRow.forEach((val, ci) => {
-    if (val && val.length > 3) dateCols[ci] = val;
-  });
+function parseSheet(csv, src){
+  const rows = parseCSVRows(csv);
+  const diag = {src, totalRows:rows.length, dates:[], motors:0, readings:0, skipped:0, errors:[]};
 
+  if(rows.length < DATA_START + 1){
+    diag.errors.push('Too few rows: '+rows.length);
+    return {motors:[], diag};
+  }
+
+  const dateRow  = rows[DATE_ROW]  || [];
+  const shiftRow = rows[SHIFT_ROW] || [];
+
+  // Auto-detect first data column: find first "SHIFT A" in shiftRow (cols 1–30)
+  let firstDataCol = 7; // safe fallback confirmed from screenshots
+  for(let ci = 1; ci < Math.min(shiftRow.length, 30); ci++){
+    if(shiftRow[ci].trim().toUpperCase() === 'SHIFT A'){ firstDataCol = ci; break; }
+  }
+
+  // Build date→column map.
+  // Loop bound = shiftRow.length (NOT dateRow.length) so the last date's B and C
+  // columns are never out-of-bounds even when Google CSV strips trailing empty cells.
+  const dateCols = [];
+  for(let ci = firstDataCol; ci < shiftRow.length; ci++){
+    const v = (dateRow[ci] || '').trim();
+    if(DATE_REGEX.test(v)){
+      dateCols.push({dateStr: v, colA: ci, colB: ci+1, colC: ci+2});
+    }
+  }
+
+  if(dateCols.length === 0){
+    diag.errors.push('No dates found in row '+DATE_ROW+'. firstDataCol='+firstDataCol);
+    diag.errors.push('dateRow sample: '+dateRow.slice(0,15).join(' | '));
+    return {motors:[], diag};
+  }
+
+  diag.dates = [dateCols[0].dateStr, dateCols[dateCols.length-1].dateStr];
+
+  // Parse motor rows
   const result = [];
-  for (let ri = 7; ri < rows.length; ri++) {
+  for(let ri = DATA_START; ri < rows.length; ri++){
     const row = rows[ri];
-    const sno = row[0];
-    if (!sno || isNaN(parseFloat(sno))) continue;
-    const tag  = (row[1] || '').trim();
-    const desc = (row[2] || '').trim();
-    const mcc  = (row[3] || '').trim();
-    if (!tag) continue;
+    if(!row || row.length < 2) continue;
 
-    let rated = null;
-    const rv = parseFloat(row[5]);
-    if (!isNaN(rv)) rated = rv;
+    // Skip rows where S NO is not a positive integer
+    const sno = (row[0] || '').trim();
+    if(!sno || isNaN(parseFloat(sno))){ diag.skipped++; continue; }
 
+    const tag  = (row[TAG_COL]  || '').trim();
+    const desc = (row[DESC_COL] || '').trim();
+    const mcc  = (row[MCC_COL]  || '').trim();
+    if(!tag){ diag.skipped++; continue; }
+
+    // Rated current is always col 5 across all three sheets
+    const rv    = parseFloat(row[RATED_COL]);
+    const rated = isNaN(rv) ? null : rv;
+
+    // Extract shift readings for every date column.
+    // cleanVal() handles typos so no valid reading is lost.
     const readings = {};
-    Object.entries(dateCols).forEach(([ci, dateStr]) => {
+    for(const {dateStr, colA, colB, colC} of dateCols){
       const shifts = {};
-      [['A',0],['B',1],['C',2]].forEach(([name, offset]) => {
-        const v = parseFloat(row[parseInt(ci) + offset]);
-        if (!isNaN(v) && v > 0) shifts[name] = Math.round(v * 1000) / 1000;
-      });
-      if (Object.keys(shifts).length) readings[dateStr] = shifts;
-    });
+      const vA = cleanVal(row[colA]); if(vA !== null) shifts.A = vA;
+      const vB = cleanVal(row[colB]); if(vB !== null) shifts.B = vB;
+      const vC = cleanVal(row[colC]); if(vC !== null) shifts.C = vC;
+      if(Object.keys(shifts).length) readings[dateStr] = shifts;
+    }
 
-    if (Object.keys(readings).length) {
+    const readingCount = Object.keys(readings).length;
+    if(readingCount > 0){
       result.push({
-        source: sourceLabel,
-        group: getGroupFromMCC(mcc, sourceLabel),
+        source: src,
+        group:  groupFromTag(tag, mcc, src),
         tag, description: desc, mcc,
         rated_current: rated,
         readings
       });
+      diag.motors++;
+      diag.readings += readingCount;
+    } else {
+      diag.skipped++;
     }
   }
-  return result;
+
+  return {motors: result, diag};
 }
 
-window.refreshFromSheets = async (isInitialLoad = false) => {
-  const btn    = document.getElementById('refreshBtn');
-  const status = document.getElementById('refreshStatus');
+function groupFromTag(tag, mcc, src){
+  if(src==='SSP1')     return 'SSP1';
+  if(src==='Biomass 1')return 'Biomass 1';
+  // Compressors by tag pattern: e.g. 41-C01A, 41-C02B
+  if(/^\d{2}-C\d/i.test(tag)) return 'Compressors';
+  if(!mcc||mcc==='nan'||mcc==='') return 'Other';
+  if(mcc.startsWith('1MCC11')||mcc.startsWith('1MCC12')||mcc.startsWith('1MCC13')||mcc.startsWith('1MCC22')||mcc.startsWith('1MCC23')||mcc.startsWith('1MCC32')||mcc.startsWith('1MCC33')) return 'CP1 Process';
+  if(/P[457]\d/i.test(mcc))      return 'Chip Cutters';
+  if(/cool\s*max/i.test(mcc))    return 'Cooling Tower';
+  if(/ETP/i.test(mcc))           return 'ETP';
+  if(/tank\s*farm/i.test(mcc))   return 'Tank Farm';
+  if(/utility/i.test(mcc))       return 'Utility';
+  if(mcc==='WTA')                 return 'WTA';
+  return 'CP1 Process'; // default for this sheet
+}
 
-  if (!isInitialLoad) {
-    btn.classList.add('loading');
-    btn.textContent = '⏳ Fetching…';
-  }
-
-  if (isInitialLoad) {
-    document.getElementById('motorCount').textContent = 'Loading motors...';
-  }
-
-  status.textContent = '';
-
-  try {
-    const allMotors = [];
-
-    for (const tab of SHEET_TABS) {
-      const url = `https://docs.google.com/spreadsheets/d/e/${SHEET_PUB_ID}/pub?gid=${tab.gid}&single=true&output=csv&nocache=${Date.now()}`;
-      const res = await fetch(url);
-
-      if (!res.ok) throw new Error(`Failed to fetch ${tab.label}`);
-
-      const csv = await res.text();
-      const parsed = parseSheetCSV(csv, tab.label);
-      allMotors.push(...parsed);
+// ═══════════════════════════════════════════════════════
+// FETCH ALL SHEETS
+// ═══════════════════════════════════════════════════════
+let lastDiags = [];
+async function fetchAllSheets(silent=false){
+  const all=[];
+  lastDiags=[];
+  for(let i=0;i<TABS.length;i++){
+    const tab=TABS[i];
+    if(!silent){
+      document.getElementById('splash-status').textContent='Fetching '+tab.label+'… ('+(i+1)+'/'+TABS.length+')';
+      document.getElementById('sbar').style.width=((i/TABS.length)*80)+'%';
     }
+    const url='https://docs.google.com/spreadsheets/d/e/'+SHEET_ID+'/pub?gid='+tab.gid+'&single=true&output=csv';
+    const csv=await fetchCSV(url);
+    const {motors:parsed, diag}=parseSheet(csv,tab.label);
+    lastDiags.push(diag);
+    all.push(...parsed);
+    console.log(tab.label,'→',parsed.length,'motors, dates:',diag.dates.join(' → '));
+  }
+  return all;
+}
 
-    // ❗ FULL RESET (no merge, no cache)
-    motors.length = 0;
-    allMotors.forEach(m => motors.push(m));
+// ═══════════════════════════════════════════════════════
+// DIAGNOSTIC — shows parse stats per tab
+// ═══════════════════════════════════════════════════════
+function dlog(msg,cls=''){
+  const d=document.getElementById('diagLog');
+  const l=document.createElement('div');l.className=cls;l.textContent=msg;
+  d.appendChild(l);d.scrollTop=d.scrollHeight;
+}
+window.openDiag=()=>{document.getElementById('diagLog').innerHTML='';document.getElementById('diagModal').classList.add('open');runDiag();};
+window.runDiag=async()=>{
+  document.getElementById('diagLog').innerHTML='';
+  const testUrl='https://docs.google.com/spreadsheets/d/e/'+SHEET_ID+'/pub?gid=0&single=true&output=csv';
 
-    // ❗ Reinitialize dashboard cleanly
-    selectedIdx = null;
+  // --- Step 1: proxy test ---
+  dlog('── PROXY TEST ──────────────────────────','info');
+  let goodProxy=null;
+  for(const proxy of PROXIES){
+    dlog('Testing: '+proxy.name,'info');
+    try{
+      const res=await fetch(proxy.url(testUrl),{signal:AbortSignal.timeout(10000)});
+      dlog('  HTTP '+res.status+(res.ok?' OK':' FAIL'));
+      if(!res.ok){dlog('  ✗ Non-2xx','err');continue;}
+      const text=await proxy.extract(res);
+      if(!text||text.length<100){dlog('  ✗ Empty','err');continue;}
+      dlog('  ✓ Got '+text.length.toLocaleString()+' bytes'+(text.length < 10000 ? ' ⚠ SUSPICIOUSLY SMALL — may be truncated' : ''),'ok');
+      const rows=parseCSVRows(text);
+      dlog('  Rows in CSV: '+rows.length+(rows.length < 20 ? ' ⚠ TOO FEW ROWS' : ''));
+      const shiftRow=rows[SHIFT_ROW]||[];
+      let fdc=7;for(let ci=1;ci<Math.min(shiftRow.length,30);ci++){if(shiftRow[ci].trim().toUpperCase()==='SHIFT A'){fdc=ci;break;}}
+      const dateRow=rows[DATE_ROW]||[];
+      const dateCells=dateRow.filter(v=>DATE_REGEX.test(v.trim()));
+      dlog('  First data col detected: '+fdc+' (col '+String.fromCharCode(64+fdc)+' in sheet)');
+      dlog('  Date cells found (row '+DATE_ROW+'): '+dateCells.length+(dateCells.length?'  ['+dateCells[0]+' … '+dateCells[dateCells.length-1]+']':'')+(dateCells.length < 3 ? ' ⚠ TOO FEW DATES — proxy may be truncating' : ''));
+      if(dateCells.length===0){
+        dlog('  ✗ No dates — check DATE_ROW constant or sheet structure','err');
+      } else {
+        dlog('  ✓ Parser can read this sheet','ok');
+      }
+      dlog('  ✓ Proxy "'+proxy.name+'" works','ok');
+      goodProxy=proxy;workingProxy=proxy;
+      break;
+    }catch(e){dlog('  ✗ '+e.message,'err');}
+    dlog('');
+  }
+  if(!goodProxy){dlog('✗ ALL PROXIES FAILED','err');dlog('Sheet must be published: File → Share → Publish to web → CSV','warn');return;}
 
-    renderList();
-    updateAlertBadge();
-
-    document.getElementById('hdrSub').textContent =
-      `${motors.length} motors · Live from Google Sheets`;
-
-    // Remove loader & show empty state
-    document.getElementById('mainArea').innerHTML = `
-      <div class="empty">
-        <div class="empty-icon">⚡</div>
-        <div>Select a motor to view its current trend</div>
-      </div>
-    `;
-
-    // Auto-select first motor after load
-    setTimeout(() => {
-      const first = document.querySelector('.motor-item');
-      if (first) first.click();
-    }, 150);
-
-    // Status
-    const now = new Date();
-    const timeStr = now.toLocaleTimeString();
-
-    status.textContent = `✓ Updated ${timeStr}`;
-
-    if (!isInitialLoad) {
-      btn.textContent = '🔄 Refresh Data';
-      btn.classList.remove('loading');
+  dlog('');
+  // --- Step 2: parse stats from last fetch (if available) ---
+  if(lastDiags.length>0){
+    dlog('── LAST FETCH PARSE STATS ───────────────','info');
+    for(const d of lastDiags){
+      dlog('['+d.src+']','info');
+      dlog('  Total CSV rows: '+d.totalRows);
+      if(d.dates.length)dlog('  Date range: '+d.dates[0]+' → '+d.dates[1]);
+      dlog('  Motors with readings: '+d.motors,'ok');
+      dlog('  Total reading days: '+d.readings,'ok');
+      dlog('  Rows skipped (blank/no readings): '+d.skipped);
+      if(d.errors.length)d.errors.forEach(e=>dlog('  ⚠ '+e,'warn'));
     }
+  } else {
+    dlog('── FULL PARSE TEST (all 3 tabs) ────────','info');
+    dlog('Fetching all sheets…','info');
+    try{
+      await fetchAllSheets(true);
+      for(const d of lastDiags){
+        dlog('['+d.src+']','info');
+        if(d.dates.length)dlog('  Date range: '+d.dates[0]+' → '+d.dates[1]);
+        dlog('  Motors: '+d.motors+', Reading-days: '+d.readings,'ok');
+        if(d.errors.length)d.errors.forEach(e=>dlog('  ⚠ '+e,'warn'));
+      }
+    }catch(e){dlog('Fetch failed: '+e.message,'err');}
+  }
+};
 
-  } catch (err) {
+// ═══════════════════════════════════════════════════════
+// REFRESH & MERGE
+// Fetches all sheets fresh, merges NEW dates into existing cache
+// (existing readings are never overwritten — standby/running changes preserved)
+// ═══════════════════════════════════════════════════════
+window.refreshFromSheets=async function(silent=false){
+  const btn=document.getElementById('refreshBtn');
+  const status=document.getElementById('refreshStatus');
+  if(!silent){btn.classList.add('loading');btn.innerHTML='⏳ Fetching…';status.textContent='';}
+  try{
+    const fetched=await fetchAllSheets(silent);
+    // Merge: fetched data is the "incoming", existing cache is "existing"
+    // New dates get added, old dates are kept untouched
+    const existing = loadCache() || [];
+    const merged = mergeMotors(existing, fetched);
+    motors.length=0;merged.forEach(m=>motors.push(m));
+    saveCache(merged);rebuildGroups();renderList();updateAlertBadge();updateCacheBar();
+    if(!silent){
+      selectedIdx=null;
+      document.getElementById('mainArea').innerHTML='<div class="empty"><div class="empty-icon">⚡</div><div>Data merged &amp; saved — select a motor to view</div></div>';
+      const totalReadings = merged.reduce((s,m)=>s+Object.keys(m.readings).length,0);
+      status.textContent='✓ '+merged.length+' motors · '+totalReadings.toLocaleString()+' readings · '+new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+      btn.innerHTML='🔄 Refresh &amp; Merge';btn.classList.remove('loading');
+    }
+  }catch(err){
     console.error(err);
+    if(!silent){status.textContent='✗ Error — click 🔍 Diagnose';btn.innerHTML='🔄 Refresh &amp; Merge';btn.classList.remove('loading');showErr(err.message);}
+  }
+};
+function showErr(msg){
+  let b=document.getElementById('errBox');
+  if(!b){b=document.createElement('div');b.id='errBox';b.style.cssText='position:fixed;top:58px;left:50%;transform:translateX(-50%);background:#2d0a0a;border:1px solid #e84040;color:#ff8080;padding:12px 16px;border-radius:8px;font-size:12px;z-index:9999;max-width:520px;width:92%;box-shadow:0 4px 20px rgba(0,0,0,0.5)';document.body.appendChild(b);}
+  b.innerHTML='<div style="font-weight:700;margin-bottom:5px;color:#ff4444">⚠ Fetch Failed</div><div style="margin-bottom:6px">'+msg+'</div><div style="margin-top:8px;display:flex;gap:8px;justify-content:flex-end"><button onclick="openDiag()" style="background:#3a7bd5;border:none;color:#fff;padding:3px 10px;border-radius:4px;cursor:pointer;font-size:11px">🔍 Diagnose</button><button onclick="document.getElementById(\'errBox\').remove()" style="background:#555;border:none;color:#fff;padding:3px 10px;border-radius:4px;cursor:pointer;font-size:11px">Close</button></div>';
+}
 
-    document.getElementById('mainArea').innerHTML = `
-      <div class="empty">
-        <div class="empty-icon">⚠</div>
-        <div>Failed to load data</div>
-        <div style="font-size:11px;color:#999;margin-top:5px">${err.message}</div>
+// ═══════════════════════════════════════════════════════
+// STARTUP
+// Always fetches fresh from Sheets on load.
+// If fetch fails, falls back to cache so the app still works offline.
+// ═══════════════════════════════════════════════════════
+async function startup(){
+  // Show splash immediately
+  const splash=document.getElementById('splash');
+  splash.style.display='flex';
+  document.getElementById('splash-status').textContent='Connecting to Google Sheets…';
+
+  try{
+    // Always fetch fresh — never load old cache without a fresh fetch first
+    const fetched = await fetchAllSheets(false);
+
+    document.getElementById('sbar').style.width='92%';
+    document.getElementById('splash-status').textContent='Saving '+fetched.length+' motors to cache…';
+
+    // Merge with any existing cached data so historical readings are preserved
+    const existing = loadCache() || [];
+    const merged   = existing.length > 0 ? mergeMotors(existing, fetched) : fetched;
+
+    motors.length=0;
+    merged.forEach(m=>motors.push(m));
+    saveCache(merged);
+    rebuildGroups();renderList();updateAlertBadge();updateCacheBar();
+
+    document.getElementById('sbar').style.width='100%';
+    await new Promise(r=>setTimeout(r,300));
+    splash.style.display='none';
+    setTimeout(()=>{const f=document.querySelector('.motor-item');if(f)f.click();},80);
+
+  }catch(err){
+    // Fetch failed — try loading from cache as fallback
+    console.warn('Fresh fetch failed, falling back to cache:', err.message);
+    const cached = loadCache();
+    splash.style.display='none';
+
+    if(cached && cached.length > 0){
+      cached.forEach(m=>motors.push(m));
+      rebuildGroups();renderList();updateAlertBadge();updateCacheBar();
+      setTimeout(()=>{const f=document.querySelector('.motor-item');if(f)f.click();},80);
+      // Show a non-blocking warning that data may be stale
+      const status = document.getElementById('refreshStatus');
+      if(status) status.textContent = '⚠ Offline — showing cached data';
+    } else {
+      document.getElementById('mainArea').innerHTML='<div class="empty"><div class="empty-icon">⚠️</div><div>Could not fetch data and no cache found.<br>Click <strong>🔍 Diagnose</strong> to troubleshoot.</div></div>';
+      showErr(err.message);
+    }
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+// UI
+// ═══════════════════════════════════════════════════════
+function rebuildGroups(){
+  const sel=document.getElementById('groupSel');const prev=sel.value;
+  sel.innerHTML='<option value="">All sections</option>';
+  [...new Set(motors.map(m=>m.group))].sort().forEach(g=>{
+    const o=document.createElement('option');o.value=g;o.textContent=g+' ('+motors.filter(m=>m.group===g).length+')';sel.appendChild(o);
+  });
+  sel.value=prev;
+  document.getElementById('hdrSub').textContent=motors.length+' motors';
+}
+function sc(src){return src==='CP Current'?'s-cp':src==='SSP1'?'s-ssp':'s-bio';}
+function ss(src){return src==='CP Current'?'CP':src==='SSP1'?'SSP1':'BIO';}
+function getVisible(){
+  const src=document.getElementById('sourceSel').value;
+  const g=document.getElementById('groupSel').value;
+  const q=document.getElementById('search').value.toLowerCase().trim();
+  return motors.map((m,i)=>({m,i})).filter(({m})=>(!src||m.source===src)&&(!g||m.group===g)&&(!q||m.tag.toLowerCase().includes(q)||m.description.toLowerCase().includes(q)));
+}
+function renderList(){
+  const vis=getVisible();
+  document.getElementById('motorCount').textContent=vis.length+' motor'+(vis.length!==1?'s':'')+' shown';
+  const list=document.getElementById('motorList');list.innerHTML='';
+  vis.forEach(({m,i})=>{
+    const div=document.createElement('div');div.className='motor-item'+(i===selectedIdx?' active':'');
+    div.innerHTML='<div class="m-tag"><span class="m-src '+sc(m.source)+'">'+ss(m.source)+'</span>'+m.tag+'</div><div class="m-desc" title="'+m.description+'">'+m.description+'</div><div class="m-meta">'+m.mcc+' · '+Object.keys(m.readings).length+' days</div>';
+    div.onclick=()=>{selectedIdx=i;renderList();showMotor(m);};
+    list.appendChild(div);
+  });
+}
+
+// ═══════════════════════════════════════════════════════
+// DATE / SERIES
+// ═══════════════════════════════════════════════════════
+const MON={jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,oct:9,nov:10,dec:11};
+function pd(str){
+  if(!str)return null;
+  const m=str.trim().match(/(\d+)[a-z]*\s+([A-Za-z]+)[,\s]+(\d{2,4})/i)||str.trim().match(/(\d+)\s+([A-Za-z]+)\s+(\d{2,4})/i);
+  if(!m)return null;
+  const mon=MON[m[2].toLowerCase().substring(0,3)];if(mon===undefined)return null;
+  let yr=parseInt(m[3]);if(yr<100)yr+=2000;
+  return new Date(yr,mon,parseInt(m[1]));
+}
+function filterByRange(readings){
+  if(dateMode==='all')return readings;
+  const entries=Object.entries(readings).map(([d,s])=>({d,s,t:pd(d)||new Date(0)})).filter(x=>x.t>new Date(1970,0,2));
+  if(!entries.length)return readings;
+  const latest=new Date(Math.max(...entries.map(x=>x.t)));
+  let from=null,to=latest;
+  if(dateMode==='custom'){from=customFrom?new Date(customFrom):null;to=customTo?new Date(customTo):latest;}
+  else{const days={'1w':7,'2w':14,'1m':30,'2m':61,'3m':92,'6m':183}[dateMode];from=new Date(latest);from.setDate(from.getDate()-days);}
+  const out={};entries.forEach(({d,s,t})=>{if((!from||t>=from)&&t<=to)out[d]=s;});
+  return Object.keys(out).length?out:readings;
+}
+function getShiftVal(shifts){
+  if(shiftMode==='avg'){const v=Object.values(shifts).filter(v=>v>0);return v.length?+(v.reduce((a,b)=>a+b,0)/v.length).toFixed(3):null;}
+  return shifts[shiftMode]!==undefined?shifts[shiftMode]:null;
+}
+function buildSeries(m){
+  const filtered=filterByRange(m.readings);
+  const sorted=Object.entries(filtered).map(([d,s])=>({d,s,t:pd(d)||new Date(0)})).sort((a,b)=>a.t-b.t);
+  const dates=[],vals=[];
+  for(const{d,s}of sorted){const v=getShiftVal(s);if(v!==null){dates.push(d);vals.push(v);}}
+  return{dates,vals};
+}
+function rl(){return{'all':'All time','1w':'1 Week','2w':'2 Weeks','1m':'1 Month','2m':'2 Months','3m':'3 Months','6m':'6 Months','custom':'Custom'}[dateMode]||dateMode;}
+
+// ═══════════════════════════════════════════════════════
+// TREND CHART
+// ═══════════════════════════════════════════════════════
+function showMotor(m){
+  const{dates,vals}=buildSeries(m);
+  const rated=m.rated_current||null;
+  const oc1=rated?+(rated*1.1).toFixed(3):null;
+  const oc2=rated?+(rated*1.2).toFixed(3):null;
+  const aOC=ocMult===1.1?oc1:oc2;
+  const avg=vals.length?(vals.reduce((a,b)=>a+b,0)/vals.length):0;
+  const mn=vals.length?Math.min(...vals):0;
+  const mx=vals.length?Math.max(...vals):0;
+  const exc=aOC?vals.filter(v=>v>aOC).length:0;
+  const totalDays=Object.keys(m.readings).length;
+  const sb=['avg','A','B','C'].map(s=>'<button class="btn '+(shiftMode===s?'on-g':'')+'" onclick="setShift(\''+s+'\')">'+(s==='avg'?'Avg':'Shift '+s)+'</button>').join('');
+  document.getElementById('mainArea').innerHTML=`
+    <div class="chart-header"><div>
+      <span class="chart-title"><span class="m-src ${sc(m.source)}" style="font-size:9px;padding:1px 5px;border-radius:3px;margin-right:4px">${m.source}</span>${m.tag}</span>
+      <span class="chart-sub"> ${m.description} · MCC: ${m.mcc}</span>
+    </div></div>
+    <div class="toolbar">
+      <div class="tg"><label>View:</label><div class="br">${sb}</div></div>
+      <div class="tg"><label>Range:</label><div class="br">
+        ${['1w','2w','1m','2m','3m','6m','all'].map(r=>'<button class="btn '+(dateMode===r?'on-b':'')+'" onclick="setRange(\''+r+'\')">'+(r==='all'?'All':r.toUpperCase())+'</button>').join('')}
+      </div></div>
+      <div class="tg"><label>Custom:</label>
+        <div class="dp"><input type="date" id="dFrom" value="${customFrom||''}" onchange="setCR()"><span style="font-size:11px;color:#888">→</span><input type="date" id="dTo" value="${customTo||''}" onchange="setCR()"></div>
+        <span class="ri">${dates.length} pts · ${rl()}</span>
       </div>
-    `;
+      <div class="tg"><label>OC:</label><div class="br">
+        <button class="btn ${ocMult===1.1?'on-r':''}" onclick="setOC(1.1)">×1.1 ${oc1?'('+oc1.toFixed(2)+'A)':''}</button>
+        <button class="btn ${ocMult===1.2?'on-r':''}" onclick="setOC(1.2)">×1.2 ${oc2?'('+oc2.toFixed(2)+'A)':''}</button>
+      </div></div>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="sl">Avg</div><div class="sv">${avg.toFixed(2)}A</div></div>
+      <div class="stat"><div class="sl">Min</div><div class="sv">${mn.toFixed(2)}A</div></div>
+      <div class="stat"><div class="sl">Max</div><div class="sv ${aOC&&mx>aOC?'warn':''}">${mx.toFixed(2)}A</div></div>
+      <div class="stat"><div class="sl">Rated</div><div class="sv">${rated||'—'}A</div></div>
+      <div class="stat"><div class="sl">OC Limit</div><div class="sv">${aOC?aOC.toFixed(2)+'A':'—'}</div></div>
+      <div class="stat"><div class="sl">OC Events</div><div class="sv ${exc>0?'warn':'ok'}">${exc} ${exc>0?'⚠':'✓'}</div></div>
+      <div class="stat"><div class="sl">Total days</div><div class="sv" style="font-size:13px">${totalDays}</div></div>
+    </div>
+    <div class="legend-row">
+      <span class="leg"><span class="ll" style="background:#3a7bd5;display:inline-block"></span>${shiftMode==='avg'?'Avg current':'Shift '+shiftMode}</span>
+      ${rated?'<span class="leg"><span class="ll" style="border-top:2px dashed #f39c12;background:none"></span>Rated ('+rated+'A)</span>':''}
+      ${aOC?'<span class="leg"><span class="ll" style="border-top:2px dashed #e84040;background:none"></span>OC ×'+ocMult+' ('+aOC.toFixed(2)+'A)</span>':''}
+      ${exc>0?'<span class="bdg bdg-w">⚠ '+exc+' OC events</span>':'<span class="bdg bdg-ok">✓ No OC events</span>'}
+    </div>
+    <div class="chart-wrap"><canvas id="trendChart"></canvas></div>`;
+  renderChart(dates,vals,rated,aOC);
+}
+function renderChart(dates,vals,rated,aOC){
+  if(chart){chart.destroy();chart=null;}
+  const ctx=document.getElementById('trendChart');if(!ctx)return;
+  const ds=[{label:'Current (A)',data:vals,borderColor:'#3a7bd5',backgroundColor:'rgba(58,123,213,0.07)',borderWidth:1.5,pointRadius:dates.length>80?0:3,pointHoverRadius:5,fill:true,tension:0.3,order:1}];
+  if(rated)ds.push({label:'Rated ('+rated+'A)',data:Array(dates.length).fill(rated),borderColor:'#f39c12',borderWidth:1.5,borderDash:[6,4],pointRadius:0,fill:false,order:2});
+  if(aOC)ds.push({label:'OC ×'+ocMult+' ('+aOC.toFixed(2)+'A)',data:Array(dates.length).fill(aOC),borderColor:'#e84040',borderWidth:1.5,borderDash:[8,4],pointRadius:0,fill:false,order:3});
+  chart=new Chart(ctx,{type:'line',data:{labels:dates,datasets:ds},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.dataset.label+': '+c.parsed.y.toFixed(2)+' A'}}},scales:{x:{ticks:{autoSkip:true,maxTicksLimit:14,maxRotation:40,font:{size:10}},grid:{color:'rgba(0,0,0,0.04)'}},y:{title:{display:true,text:'Current (A)',font:{size:11}},ticks:{font:{size:11}},grid:{color:'rgba(0,0,0,0.05)'}}}}});
+}
 
-    status.textContent = `✗ Error`;
+// ═══════════════════════════════════════════════════════
+// OC ALERTS — full upgrade
+// Features: date range filter, group filter, sort by severity/count/streak,
+//           trend direction, consecutive streak, latest reading vs limit,
+//           show-OK toggle, copy text summary
+// ═══════════════════════════════════════════════════════
 
-    if (!isInitialLoad) {
-      btn.textContent = '🔄 Refresh Data';
-      btn.classList.remove('loading');
+// Alert-tab state (separate from trend-tab state)
+let alertRange = 'all';    // 'all' | '1w' | '1m' | '3m' | '6m' | 'custom'
+let alertFrom  = null;     // YYYY-MM-DD string or null
+let alertTo    = null;
+let alertSort  = 'severity'; // 'severity' | 'count' | 'streak'
+
+// Parse a date string from the sheet into a JS Date (reuse existing pd() from trend section)
+// Returns null if unparseable.
+function alertDateInRange(dateStr){
+  // Returns true if dateStr falls within current alertFrom/alertTo window
+  if(alertRange === 'all') return true;
+  const t = pd(dateStr);
+  if(!t) return true; // can't parse → include it
+  if(alertFrom && t < new Date(alertFrom)) return false;
+  if(alertTo   && t > new Date(alertTo+'T23:59:59')) return false;
+  return true;
+}
+
+function buildAlertWindow(){
+  // Build from/to dates based on alertRange
+  // Uses all readings to find the latest available date
+  let latest = null;
+  for(const m of motors){
+    for(const d of Object.keys(m.readings)){
+      const t = pd(d);
+      if(t && (!latest || t > latest)) latest = t;
     }
   }
+  if(!latest) latest = new Date();
+
+  if(alertRange === 'all'){
+    alertFrom = null; alertTo = null;
+    document.getElementById('arFrom').value = '';
+    document.getElementById('arTo').value = '';
+    return;
+  }
+  if(alertRange === 'custom') return; // already set by inputs
+
+  const days = {'1w':7,'1m':30,'3m':91,'6m':182}[alertRange] || 0;
+  const from = new Date(latest);
+  from.setDate(from.getDate() - days);
+  alertFrom = from.toISOString().slice(0,10);
+  alertTo   = latest.toISOString().slice(0,10);
+  document.getElementById('arFrom').value = alertFrom;
+  document.getElementById('arTo').value   = alertTo;
+}
+
+window.setAlertRange = function(mode){
+  alertRange = mode;
+  // Highlight active range button
+  ['1w','1m','3m','6m','all'].forEach(r=>{
+    const b = document.getElementById('arBtn'+r);
+    if(b) b.className = 'btn' + (r===mode?' on-b':'');
+  });
+  if(mode==='custom'){
+    const f=document.getElementById('arFrom').value;
+    const t=document.getElementById('arTo').value;
+    alertFrom=f||null; alertTo=t||null;
+  } else {
+    buildAlertWindow();
+  }
+  renderAlertPage();
 };
 
-    
-
-window.toggleExportMenu = () => {
-  document.getElementById('exportDropdown').classList.toggle('open');
+window.setAlertSort = function(s){
+  alertSort = s;
+  document.getElementById('sortBtnSev').className    = 'btn'+(s==='severity'?' on-b':'');
+  document.getElementById('sortBtnCount').className  = 'btn'+(s==='count'?' on-b':'');
+  document.getElementById('sortBtnStreak').className = 'btn'+(s==='streak'?' on-b':'');
+  renderAlertPage();
 };
-document.addEventListener('click', e => {
-  const wrap = document.getElementById('exportWrap');
-  if (wrap && !wrap.contains(e.target))
-    document.getElementById('exportDropdown').classList.remove('open');
-});
-window.doExport = (scope) => {
-  document.getElementById('exportDropdown').classList.remove('open');
-  const now = new Date().toISOString().slice(0,19).replace('T',' ');
-  let data, filename;
-  if (scope === 'all') {
-    data = { exported: now, scope: 'all_motors', total: motors.length, motors };
-    filename = 'motors_all.json';
-  } else if (scope === 'filtered') {
-    const visible = getVisible().map(({m}) => m);
-    data = { exported: now, scope: 'filtered', total: visible.length, motors: visible };
-    filename = 'motors_filtered.json';
-  } else if (scope === 'oc') {
-    const mult = alertOCMult || 1.1;
-    const ocMotors = motors.filter(m => {
-      if (!m.rated_current) return false;
-      const thr = m.rated_current * mult;
-      return Object.values(m.readings).some(shifts => {
-        const vals = Object.values(shifts).filter(v => v > 0);
-        return vals.length && vals.reduce((a,b)=>a+b,0)/vals.length > thr;
-      });
+
+// Get the average current for a given shift reading set
+function avgShifts(shifts){
+  const v = Object.values(shifts).filter(x=>x>0);
+  return v.length ? v.reduce((a,b)=>a+b,0)/v.length : null;
+}
+
+// Get all dates sorted chronologically
+function sortedDates(m){
+  return Object.keys(m.readings)
+    .map(d=>({d, t: pd(d)||new Date(0)}))
+    .sort((a,b)=>a.t-b.t)
+    .map(x=>x.d);
+}
+
+// Compute stats for one motor within the current date window
+function motorAlertStats(m, mult){
+  const rated = m.rated_current;
+  const thr   = rated ? rated * mult : null;
+  const allSorted = sortedDates(m);
+
+  // Filter to window
+  const windowDates = allSorted.filter(d => alertDateInRange(d));
+
+  // Breach dates in window
+  const breachesInWindow = windowDates.filter(d=>{
+    if(!thr) return false;
+    const avg = avgShifts(m.readings[d]);
+    return avg !== null && avg > thr;
+  });
+
+  // Latest reading (most recent date with data, anywhere in full history)
+  const latestDate = allSorted[allSorted.length-1];
+  const latestAvg  = latestDate ? avgShifts(m.readings[latestDate]) : null;
+
+  // Severity: how far over the limit is the latest reading (%)
+  const severityPct = (thr && latestAvg) ? ((latestAvg - thr) / thr * 100) : -Infinity;
+
+  // Consecutive streak: count from latest date backwards
+  let streak = 0;
+  for(let i = allSorted.length-1; i >= 0; i--){
+    const d = allSorted[i];
+    if(!thr) break;
+    const avg = avgShifts(m.readings[d]);
+    if(avg !== null && avg > thr) streak++;
+    else break;
+  }
+
+  // Trend direction: compare breach rate in last 7 days vs prior 7 days
+  const now = alertTo ? new Date(alertTo) : (allSorted.length ? (pd(allSorted[allSorted.length-1])||new Date()) : new Date());
+  const d7  = new Date(now); d7.setDate(d7.getDate()-7);
+  const d14 = new Date(now); d14.setDate(d14.getDate()-14);
+  const recent = allSorted.filter(d=>{ const t=pd(d); return t&&t>d7&&t<=now; });
+  const prior  = allSorted.filter(d=>{ const t=pd(d); return t&&t>d14&&t<=d7; });
+  const recentBr = recent.filter(d=>{ if(!thr)return false; const a=avgShifts(m.readings[d]); return a!==null&&a>thr; }).length;
+  const priorBr  = prior.filter(d=>{  if(!thr)return false; const a=avgShifts(m.readings[d]); return a!==null&&a>thr; }).length;
+  let trendDir = 'stable';
+  if(recentBr > priorBr)  trendDir = 'worsening';
+  if(recentBr < priorBr)  trendDir = 'improving';
+
+  return {
+    breachesInWindow,
+    latestDate, latestAvg,
+    severityPct,
+    streak,
+    trendDir,
+    totalDays: Object.keys(m.readings).length,
+    windowDates,
+  };
+}
+
+function renderAlertPage(){
+  const mult     = alertOCMult;
+  const showOK   = document.getElementById('showOKchk')?.checked || false;
+  const groupFil = document.getElementById('alertGroupSel')?.value || '';
+
+  // Rebuild group dropdown
+  const grpSel = document.getElementById('alertGroupSel');
+  if(grpSel){
+    const prev = grpSel.value;
+    grpSel.innerHTML = '<option value="">All groups</option>';
+    [...new Set(motors.map(m=>m.group))].sort().forEach(g=>{
+      const o=document.createElement('option'); o.value=g; o.textContent=g; grpSel.appendChild(o);
     });
-    data = { exported: now, scope: `oc_only_x${mult}`, threshold_multiplier: mult, total: ocMotors.length, motors: ocMotors };
-    filename = `motors_oc_x${mult}.json`;
+    grpSel.value = prev;
   }
-  const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
-  const url  = URL.createObjectURL(blob);
-  const a    = document.createElement('a');
-  a.href = url; a.download = filename; a.click();
-  URL.revokeObjectURL(url);
+
+  // Filter motors by group
+  const filtered = motors.filter(m => !groupFil || m.group === groupFil);
+
+  // Compute stats for each motor
+  const results = filtered.map((m,i)=>({
+    m, i: motors.indexOf(m),
+    stats: motorAlertStats(m, mult)
+  }));
+
+  const withOC  = results.filter(r => r.stats.breachesInWindow.length > 0);
+  const noOC    = results.filter(r => r.stats.breachesInWindow.length === 0 && r.m.rated_current);
+  const unrated = filtered.filter(m => !m.rated_current);
+
+  // Update header badge — always shows ALL-TIME count regardless of window
+  const allTimeCnt = motors.filter(m=>{
+    if(!m.rated_current) return false;
+    const thr = m.rated_current * mult;
+    return Object.values(m.readings).some(s=>{ const v=Object.values(s).filter(v=>v>0); return v.length&&v.reduce((a,b)=>a+b,0)/v.length>thr; });
+  }).length;
+  const badge = document.getElementById('alertBadge');
+  badge.textContent = allTimeCnt||'—';
+  badge.className = 'tab-badge'+(allTimeCnt>0?'':' zero');
+
+  // Summary pills
+  const rangeLabel = {'all':'All time','1w':'Last 7 days','1m':'Last 30 days','3m':'Last 3 months','6m':'Last 6 months','custom':'Custom range'}[alertRange]||alertRange;
+  document.getElementById('summaryPills').innerHTML =
+    `<span class="pill p-r">⚠ ${withOC.length} OC</span>`+
+    (showOK ? `<span class="pill p-g">✓ ${noOC.length} OK</span>` : '')+
+    `<span class="pill p-gr">— ${unrated.length} unrated</span>`+
+    `<span class="pill p-or">×${mult} · ${rangeLabel}</span>`;
+
+  const body = document.getElementById('alertBody');
+  body.innerHTML = '';
+
+  if(!motors.length){
+    body.innerHTML='<div class="empty"><div class="empty-icon">🔄</div><div>No data loaded</div></div>';
+    return;
+  }
+  if(withOC.length === 0 && !showOK){
+    body.innerHTML='<div class="empty"><div class="empty-icon">✅</div><div>No OC events in this period</div></div>';
+    return;
+  }
+
+  // Group results
+  const grouped = {};
+  [...new Set(filtered.map(m=>m.group))].sort().forEach(g=>grouped[g]=[]);
+  results.forEach(r=>{ if(grouped[r.m.group]) grouped[r.m.group].push(r); });
+
+  // Sort function
+  function sortRows(rows){
+    return [...rows].sort((a,b)=>{
+      if(alertSort==='severity') return b.stats.severityPct - a.stats.severityPct;
+      if(alertSort==='count')    return b.stats.breachesInWindow.length - a.stats.breachesInWindow.length;
+      if(alertSort==='streak')   return b.stats.streak - a.stats.streak;
+      return 0;
+    });
+  }
+
+  // Sort groups by OC count descending
+  Object.entries(grouped)
+    .filter(([,rs])=>rs.length>0)
+    .sort(([,a],[,b])=>
+      b.filter(r=>r.stats.breachesInWindow.length>0).length -
+      a.filter(r=>r.stats.breachesInWindow.length>0).length
+    )
+    .forEach(([gn, rows])=>{
+      const ocInGroup = rows.filter(r=>r.stats.breachesInWindow.length>0);
+      if(ocInGroup.length===0 && !showOK) return; // skip clean groups unless showing OK
+
+      const gDiv = document.createElement('div'); gDiv.className='ag';
+      const hdr  = document.createElement('div'); hdr.className='agh';
+      hdr.innerHTML =
+        `<span class="gn">${gn}</span>`+
+        `<span style="font-size:10px;color:#aaa">${rows.length} motors</span>`+
+        `<div class="gp">`+
+        (ocInGroup.length>0?`<span class="gb gb-w">⚠ ${ocInGroup.length} OC</span>`:'')+
+        (showOK?`<span class="gb gb-ok">✓ ${rows.length-ocInGroup.length} OK</span>`:'')+
+        `<span class="gt">${ocInGroup.length>0?'▾':'▸'}</span></div>`;
+
+      const ml = document.createElement('div');
+      ml.className = 'aml'+(ocInGroup.length>0?' open':'');
+
+      // OC motors first, then OK if shown
+      const ocSorted = sortRows(ocInGroup);
+      const okRows   = showOK ? rows.filter(r=>r.stats.breachesInWindow.length===0 && r.m.rated_current) : [];
+
+      [...ocSorted, ...okRows].forEach(({m, i, stats})=>{
+        const {breachesInWindow, latestAvg, latestDate, severityPct, streak, trendDir, totalDays} = stats;
+        const rated = m.rated_current;
+        const thr   = rated ? rated*mult : null;
+        const isOC  = breachesInWindow.length > 0;
+
+        // Latest reading bar
+        const barPct = (thr && latestAvg) ? Math.min(100, (latestAvg/thr)*100) : 0;
+        const isOver = latestAvg && thr && latestAvg > thr;
+
+        // Trend arrow
+        const arrowHTML = trendDir==='worsening'
+          ? `<span class="trend-arrow tr-up" title="Getting worse">⬆ worse</span>`
+          : trendDir==='improving'
+          ? `<span class="trend-arrow tr-dn" title="Getting better">⬇ better</span>`
+          : `<span class="trend-arrow tr-st" title="Stable">→ stable</span>`;
+
+        // Streak badge
+        let streakHTML = '';
+        if(streak>=5)       streakHTML=`<span class="streak-badge streak-hot">🔴 ${streak} day streak</span>`;
+        else if(streak>=2)  streakHTML=`<span class="streak-badge streak-warm">🟡 ${streak} day streak</span>`;
+        else if(streak===1) streakHTML=`<span class="streak-badge streak-warm">🟡 1 day</span>`;
+
+        // Severity %
+        const sevStr = rated && latestAvg
+          ? (((latestAvg-rated)/rated)*100).toFixed(1)+'% over rated'
+          : '';
+
+        // Breach chips — only in window, max 12 shown
+        const chipsHTML = isOC
+          ? `<div class="bw">${breachesInWindow.slice(-12).map(d=>`<span class="bc">${d}</span>`).join('')}${breachesInWindow.length>12?`<span class="bc-old">+${breachesInWindow.length-12} more</span>`:''}</div>`
+          : '';
+
+        const row = document.createElement('div');
+        row.className = 'ar'+(isOC?'':' no-oc');
+        row.innerHTML =
+          `<div class="arl">`+
+            `<div class="art">`+
+              `<span class="m-src ${sc(m.source)}" style="font-size:9px;padding:1px 4px;border-radius:3px">${ss(m.source)}</span>`+
+              `<strong>${m.tag}</strong>`+
+              (isOC ? arrowHTML : '')+
+              (isOC && streak>0 ? streakHTML : '')+
+            `</div>`+
+            `<div class="ard">${m.description}</div>`+
+            `<div class="arm">MCC: ${m.mcc} · Rated: ${rated||'—'}A · OC limit: ${thr?thr.toFixed(1)+'A':'—'} · ${totalDays} days total</div>`+
+            (latestAvg!==null ?
+              `<div class="ar-reading">`+
+                `<span class="ar-reading-val ${isOver?'over':'ok'}">${latestAvg.toFixed(1)}A</span>`+
+                `<span class="ar-reading-meta">latest (${latestDate||'—'})</span>`+
+                `<div class="ar-bar-wrap"><div class="ar-bar ${isOver?'over':'ok'}" style="width:${barPct}%"></div></div>`+
+                (sevStr?`<span class="ar-reading-meta" style="color:${isOver?'#e84040':'#27ae60'}">${sevStr}</span>`:'')
+              +`</div>`
+            : '')+
+            chipsHTML+
+            (isOC?`<button class="vtb" data-idx="${i}">View trend ↗</button>`:'')+
+          `</div>`+
+          `<div class="arr">`+
+            `<div class="ocn ${isOC?'':'zero'}">${isOC?breachesInWindow.length:'OK'}</div>`+
+            `<div class="ocl">${isOC?'OC events':'no events'}</div>`+
+            (isOC && severityPct > -Infinity ? `<div class="sev-pct ${isOC?'':'ok'}">${severityPct>0?'+'+severityPct.toFixed(1)+'%':severityPct.toFixed(1)+'%'}</div>` : '')+
+          `</div>`;
+
+        ml.appendChild(row);
+      });
+
+      hdr.onclick=()=>{
+        ml.classList.toggle('open');
+        hdr.querySelector('.gt').textContent=ml.classList.contains('open')?'▾':'▸';
+      };
+      gDiv.appendChild(hdr); gDiv.appendChild(ml); body.appendChild(gDiv);
+    });
+
+  body.addEventListener('click',e=>{
+    const b=e.target.closest('.vtb');
+    if(b) goToMotor(parseInt(b.dataset.idx));
+  });
+}
+
+function updateAlertBadge(){
+  const cnt=motors.filter(m=>{
+    if(!m.rated_current)return false;
+    const thr=m.rated_current*1.1;
+    return Object.values(m.readings).some(s=>{
+      const v=Object.values(s).filter(v=>v>0);
+      return v.length&&v.reduce((a,b)=>a+b,0)/v.length>thr;
+    });
+  }).length;
+  const b=document.getElementById('alertBadge');
+  b.textContent=cnt||'—';
+  b.className='tab-badge'+(cnt>0?'':' zero');
+}
+
+// ── Copy Summary ──────────────────────────────────────
+window.copySummary = function(){
+  const mult = alertOCMult;
+  const rangeLabel = {'all':'All time','1w':'Last 7 days','1m':'Last 30 days','3m':'Last 3 months','6m':'Last 6 months','custom':'Custom range'}[alertRange]||alertRange;
+  const now = new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+  const lines = [
+    `OC Alert Summary — ${now} — ${rangeLabel} — ×${mult} threshold`,
+    '='.repeat(55),
+  ];
+
+  const grouped = {};
+  [...new Set(motors.map(m=>m.group))].sort().forEach(g=>grouped[g]=[]);
+  motors.forEach(m=>{ if(grouped[m.group]) grouped[m.group].push(m); });
+
+  Object.entries(grouped).forEach(([gn, grpMotors])=>{
+    const grpResults = grpMotors.map(m=>({ m, stats: motorAlertStats(m, mult) }))
+      .filter(r=>r.stats.breachesInWindow.length>0)
+      .sort((a,b)=>b.stats.severityPct-a.stats.severityPct);
+    if(!grpResults.length) return;
+    lines.push('');
+    lines.push(`${gn} (${grpResults.length} motor${grpResults.length>1?'s':''} in OC)`);
+    lines.push('-'.repeat(40));
+    grpResults.forEach(({m, stats})=>{
+      const rated = m.rated_current;
+      const thr   = rated ? (rated*mult).toFixed(1) : '—';
+      const latest= stats.latestAvg ? stats.latestAvg.toFixed(1)+'A' : '—';
+      const streak= stats.streak > 1 ? ` | ${stats.streak}-day streak` : '';
+      const trend = stats.trendDir==='worsening'?' ⬆ worsening':stats.trendDir==='improving'?' ⬇ improving':' → stable';
+      lines.push(
+        `  ${m.tag.padEnd(14)} ${String(stats.breachesInWindow.length).padStart(3)} events`+
+        ` | Latest ${latest.padStart(8)}`+
+        ` | OC limit ${thr}A`+
+        `${streak}${trend}`
+      );
+    });
+  });
+
+  lines.push('');
+  lines.push(`Generated by MCC Motor Current Trends — SamiUddin Ahmed Zia · E&I Dept · Ismail Resin`);
+
+  navigator.clipboard.writeText(lines.join('\n')).then(()=>{
+    const btn = document.getElementById('copyBtn');
+    btn.textContent='✓ Copied!'; btn.classList.add('copied');
+    setTimeout(()=>{ btn.textContent='📋 Copy Summary'; btn.classList.remove('copied'); }, 2500);
+  }).catch(()=>{ alert(lines.join('\n')); });
 };
-}; // end _dashboardInit
+
+// ═══════════════════════════════════════════════════════
+// CONTROLS
+// ═══════════════════════════════════════════════════════
+window.switchTab=function(tab){
+  activeTab=tab;
+  document.getElementById('pageTrend').style.display=tab==='trend'?'flex':'none';
+  document.getElementById('pageAlert').style.display=tab==='alert'?'flex':'none';
+  document.getElementById('tabTrend').classList.toggle('active',tab==='trend');
+  document.getElementById('tabAlert').classList.toggle('active',tab==='alert');
+  if(tab==='alert'){ buildAlertWindow(); renderAlertPage(); }
+};
+window.setOC=mult=>{ocMult=mult;if(selectedIdx!==null)showMotor(motors[selectedIdx]);};
+window.setShift=s=>{shiftMode=s;if(selectedIdx!==null)showMotor(motors[selectedIdx]);};
+window.setRange=mode=>{dateMode=mode;if(mode!=='custom'){customFrom=null;customTo=null;}if(selectedIdx!==null)showMotor(motors[selectedIdx]);};
+window.setCR=()=>{const f=document.getElementById('dFrom'),t=document.getElementById('dTo');if(f&&t&&(f.value||t.value)){customFrom=f.value||null;customTo=t.value||null;dateMode='custom';if(selectedIdx!==null)showMotor(motors[selectedIdx]);}};
+window.setAlertOC=mult=>{alertOCMult=mult;document.getElementById('aBtn11').className='btn'+(mult===1.1?' on-r':'');document.getElementById('aBtn12').className='btn'+(mult===1.2?' on-r':'');renderAlertPage();};
+window.goToMotor=idx=>{selectedIdx=idx;document.getElementById('sourceSel').value=motors[idx].source;document.getElementById('groupSel').value='';document.getElementById('search').value='';switchTab('trend');renderList();showMotor(motors[idx]);setTimeout(()=>{const a=document.querySelector('.motor-item.active');if(a)a.scrollIntoView({block:'center',behavior:'smooth'});},120);};
+window.toggleExportMenu=()=>document.getElementById('exportDropdown').classList.toggle('open');
+document.addEventListener('click',e=>{const w=document.getElementById('hdrRight');if(w&&!w.contains(e.target))document.getElementById('exportDropdown').classList.remove('open');});
+window.doExport=scope=>{
+  document.getElementById('exportDropdown').classList.remove('open');
+  const now=new Date().toISOString().slice(0,19).replace('T',' ');let data,filename;
+  if(scope==='all'){data={exported:now,scope:'all_motors',total:motors.length,motors};filename='motors_all.json';}
+  else if(scope==='filtered'){const v=getVisible().map(({m})=>m);data={exported:now,scope:'filtered',total:v.length,motors:v};filename='motors_filtered.json';}
+  else{const mult=alertOCMult||1.1;const ocM=motors.filter(m=>{if(!m.rated_current)return false;const thr=m.rated_current*mult;return Object.values(m.readings).some(s=>{const v=Object.values(s).filter(v=>v>0);return v.length&&v.reduce((a,b)=>a+b,0)/v.length>thr;});});data={exported:now,scope:'oc_only_x'+mult,threshold_multiplier:mult,total:ocM.length,motors:ocM};filename='motors_oc_x'+mult+'.json';}
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=filename;a.click();URL.revokeObjectURL(url);
+};
+document.getElementById('sourceSel').addEventListener('change',()=>{document.getElementById('groupSel').value='';renderList();});
+document.getElementById('groupSel').addEventListener('change',renderList);
+document.getElementById('search').addEventListener('input',renderList);
+
+startup();
 </script>
-
-
-
-<div class="author-bar">
-  Made by &nbsp;<span>SamiUddin Ahmed Zia</span>&nbsp;|&nbsp;E &amp; I Dept&nbsp;|&nbsp;Ismail Resin (Pvt) Ltd
-</div>
-<script>
-window.addEventListener('load', () => {
-  // Show loading text in header also
-  document.getElementById('hdrSub').textContent = 'Fetching live data…';
-
-  // Small delay ensures UI renders before fetch starts
-  setTimeout(() => {
-    if (typeof refreshFromSheets === 'function') {
-      refreshFromSheets(true); // pass flag for initial load
-    }
-  }, 200);
-});
-</script>
-
 </body>
 </html>
